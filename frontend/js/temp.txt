@@ -1,0 +1,1 @@
+we put all the frontend js files in here
