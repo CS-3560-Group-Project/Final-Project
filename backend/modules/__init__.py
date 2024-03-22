@@ -8,6 +8,6 @@ from backend.modules.Hours import Hours
 from backend.modules.Location import Location
 from backend.modules.Order import Order
 from backend.modules.PastOrder import PastOrder
-from backend.modules.Restraunt import Restraunt
+from backend.modules.Restaurant import Restraunt
 from backend.modules.Review import Review
 from backend.modules.ShoppingCart import ShoppingCart

@@ -9,3 +9,7 @@ class Review:
         self.account = account
         self.score = score
         self.description = description
+
+    # creates a review
+    def createReview(self, restraunt: Restraunt, account: Account, score: int, description: str) -> None:
+        pass

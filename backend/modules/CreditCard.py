@@ -8,3 +8,8 @@ class CreditCard:
         self.cardSecurityCode = securityCode
         self.cardExpirationMonth = expirationMonth
         self.cardExpirationYear = expirationYear
+
+    def chargePayment(self) -> None:
+        pass
+
+    

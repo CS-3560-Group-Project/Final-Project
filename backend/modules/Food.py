@@ -9,3 +9,5 @@ class Food:
         self.price = price
         self.description = description
         self.isBeverage = isBeverage
+
+    

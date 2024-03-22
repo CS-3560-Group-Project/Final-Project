@@ -12,3 +12,11 @@ class Order:
         self.price = price
         self.payment = payment
         self.isProcessing = isProcessing
+
+    #define change order status. changes the order status between pending, in process, and ready
+    def changeOrderStatus(self, isProcessing: bool) -> None:
+        pass
+
+    # when order status is changed to being canceled, this method will cancel the order
+    def cancelOrder(self) -> bool:
+        pass
