@@ -27,15 +27,6 @@ mydb.close() # close database
 mydb = mysql.connector.connect(host=HOST, user=USER, password=PASSWORD, database=DATABASE_NAME)
 
 # CreditCard
-"""
-    CardID              pk
-    AccountID           fk
-    NameOnCard          VARCHAR(100)
-    CardNumber          VARCHAR(20)
-    CardSecurityCode    VARCHAR(5)
-    CardExpirationMonth VARCHAR(5)
-    CardExpirationYear  VARCHAR(5)
-"""
 mycursor.execute("""
 CREATE TABLE CreditCard (
     CardID int NOT NULL,
@@ -51,13 +42,6 @@ CREATE TABLE CreditCard (
 """)
 
 # Account
-"""
-    AccountID           pk
-    LocationID          fk
-    CardID              fk
-    Name                VARCHAR(100)
-    PhoneNumber         VARCHAR(20)
-"""
 mycursor.execute("""
 CREATE TABLE Account (
     AccountID int NOT NULL,
@@ -70,11 +54,6 @@ CREATE TABLE Account (
 """)
 
 # Location
-"""
-    LocationID          pk
-    BuildingNumber      VARCHAR(20)
-    RoomNumber          VARCHAR(20)
-"""
 mycursor.execute("""
 CREATE TABLE Location (
     LocationID int NOT NULL,
@@ -85,12 +64,6 @@ CREATE TABLE Location (
 """)
 
 # Restaurant
-"""
-    RestaurantID        pk
-    LocationID          fk
-    Name                VARCHAR(50)
-    Hours               VARCHAR(50)
-"""
 mycursor.execute("""
 CREATE TABLE Restaurant (
     RestaurantID int NOT NULL,
