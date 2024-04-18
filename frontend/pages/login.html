@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPP Campus Food & Delivery</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js"></script>
+    <link rel="icon" href="logoImg.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div class="login_container">
+      <div class="header">
+        <img id="logo" src="img/pomonalogo.png" />
+        <h1 id="HiFit">CPP Campus Food & Delivery</h1>
+      </div>
+
+      <p class="underLogo"><strong>Login </strong></p>
+      <br />
+      <section class="form">
+        <form action="login.html" method="POST">
+          <label for="loginUsername">Email: </label>
+          <input type="text" id="loginUsername" name="loginUsername" />
+          <br /><br />
+          <label for="loginPassword">Password: </label>
+          <input type="password" id="loginPassword" name="loginPassword" />
+          <br /><br />
+
+          <button type="submit" class="submit" onclick="storeUsername()">
+            Login
+          </button>
+          <button
+            type="button"
+            class="createAccount"
+            onclick="switchToCreateAccountPage()"
+          >
+            Create Account
+          </button>
+        </form>
+      </section>
+    </div>
+    <script>
+      function switchToCreateAccountPage() {
+        window.location.href = "create.html";
+      }
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>

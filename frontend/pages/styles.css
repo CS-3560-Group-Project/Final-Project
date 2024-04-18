@@ -1,0 +1,249 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: linear-gradient(135deg, #bfdff0, #c2edce);
+}
+
+body {
+  position: relative;
+  font-family: "Playfair Display", serif;
+  font-weight: bold;
+}
+
+.form,
+.progress,
+.check,
+.project-details {
+  background-color: #eef5ff;
+  border-color: #374e80;
+}
+
+#HiFit,
+#details {
+  text-align: center;
+  font-size: 50px;
+  margin-top: 5px;
+  margin-right: 10px;
+}
+
+#logo {
+  display: flex;
+  position: absolute;
+  width: 400px;
+  height: auto;
+  top: 0;
+  left: 0;
+}
+
+.header {
+  display: flex; /* Use flexbox to create a flexible container */
+  align-items: center; /* Center items vertically within the container */
+  justify-content: center;
+}
+
+.underLogo {
+  text-align: center;
+  font-size: 27px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.home_container {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  justify-content: center;
+  align-content: center;
+  max-width: 1450px;
+  min-height: 700px;
+}
+
+#loginForm {
+  min-width: 500px;
+}
+
+.login_containr {
+  display: flex;
+  max-width: 600px;
+}
+
+.form,
+.progress,
+.check,
+.project-details {
+  margin: 5px 20px;
+  padding: 15px;
+  border-style: solid;
+  border-width: 5px;
+}
+
+.buttonDiv {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+}
+
+.workoutPage {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  justify-content: center;
+  align-content: center;
+}
+.forms {
+  border: none;
+  max-width: 350px;
+}
+
+#buttonBox {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  justify-content: center;
+  align-content: center;
+}
+
+.workoutForm {
+  max-width: 840px;
+}
+
+.progress {
+  flex: 3 0 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.videos {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  height: 65%;
+}
+#progressHeader {
+  padding-bottom: 20px;
+}
+#healthProgress {
+  width: 100%;
+  background-color: #374e80;
+  margin-bottom: 20px;
+}
+
+#healthBar {
+  width: 50%;
+  height: 50px;
+  margin: 4px;
+  background-color: gold;
+}
+
+#health {
+  text-align: center;
+  font-size: 18px;
+}
+
+button {
+  background-color: #eef5ff;
+  border-color: #81aed3;
+  padding: 5px 5px;
+  border-radius: 8px;
+  font-family: "Playfair Display", serif;
+  transition: background-color 0.3s;
+  padding: 10px 10px;
+  border-radius: 17px;
+}
+
+#weightInputs,
+#runInputs,
+#liftInputs {
+  display: none;
+}
+
+#placeholder {
+  opacity: 0;
+}
+
+#backButton,
+#backButton2,
+#logout {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+#progressBarNumber {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+button:hover {
+  background-color: #cfd9e6;
+}
+
+input[type="password"],
+input[type="text"],
+input[type="target"],
+input[type="date"],
+select#workoutFrequency,
+select#workoutFrequencyGoal,
+select#setGoal,
+select#setRoutine {
+  font-family: "Playfair Display", serif;
+  font-weight: bold;
+}
+
+h3,
+h2 {
+  font-size: 2em;
+  font-family: "Playfair Display", serif;
+}
+
+p {
+  font-size: 1em;
+  margin-top: 5px;
+  font-family: "javanese text", sans-serif;
+}
+li {
+  font-size: 1em;
+  font-family: "javanese text", sans-serif;
+}
+.small-image {
+  height: 50px;
+}
+ul {
+  padding-left: 20px;
+}
+#details {
+  font-size: 30px;
+}
+#routineDiv {
+  max-width: 800px;
+}
+#liftingRoutines {
+  display: flex;
+  flex-direction: row;
+}
+.routineHeader {
+  font-size: 20px;
+  font-family: "javanese text", sans-serif;
+}
+
+#workoutContainer,
+#runningContainer {
+  max-width: 800px;
+  padding: 20px;
+}
+
+#headWorkout {
+  font-size: 35px;
+  text-decoration: underline;
+  margin-bottom: 10px;
+}
+
+#logout {
+  max-width: 62px;
+}

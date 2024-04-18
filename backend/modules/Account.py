@@ -5,15 +5,28 @@ from backend.modules import Location
 
 class Account:
 
-    def __init__(self, name: str, location: Location, broncoPayment: BroncoBucks, cardPayment: 'list[CreditCard]') -> None:
-        self.name = name
-        self.location = location
-        self.creditCardPayment = cardPayment
-        self.broncoBucksPayment = broncoPayment
+    def __init__(self) -> None:
+        # ID
+        self.id = None
+        self.locationId = None
+        self.creditCardId = []
+        # Account
+        self.username = None
+        self.password = None
+        self.name = None
+        self.phoneNumber = None
 
     # this will take in account details to create the account
     def createAccount(self, accountDetails: dict) -> None:
-        pass
+        # ID
+        self.id = accountDetails["accountId"]
+        self.locationId = accountDetails["locationId"]
+        self.creditCardId.append(accountDetails["cardId"])
+        # Account
+        self.username = accountDetails["username"]
+        self.password = accountDetails["password"]
+        self.name = accountDetails["name"]
+        self.phoneNumber = accountDetails["phoneNumber"]
 
     # this will take in account details and create either a credit card payment or
     #   bronco bucks payment

@@ -1,1 +1,4 @@
+# These are the requirements needed for python
+
 mysql-connector-python
+flask
