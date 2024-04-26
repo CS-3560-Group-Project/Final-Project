@@ -27,7 +27,7 @@ def createDatabase():
     mycursor.close() # close cursor
     mydb.close() # close database
 
-createDatabase()
+# createDatabase()
 
 ##### CREATE TABLES #####
 
@@ -89,6 +89,9 @@ def createTables():
                     
         Name VARCHAR(50) NOT NULL,
         Hours VARCHAR(50) NOT NULL,
+        ImagePath VARCHAR(255) NOT NULL,  
+        NumberReviews int NOT NULL,
+        TotalReviewScores int NOT NULL
                     
         PRIMARY KEY (RestaurantID),
         FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
@@ -104,6 +107,7 @@ def createTables():
         Name VARCHAR(50) NOT NULL,
         Description VARCHAR(50),
         Price DECIMAL(10,2) NOT NULL,
+        ImagePath VARCHAR(255) NOT NULL,             
         
         PRIMARY KEY (FoodID),
         FOREIGN KEY (RestaurantID) REFERENCES Restaurant(RestaurantID)
@@ -129,4 +133,5 @@ def createTables():
     mycursor.close() # close cursor
     mydb.close() # close database
 
-createTables()
+# createTables()
+

@@ -22,14 +22,12 @@ def queryTo(sql, params):
     mycursor = mydb.cursor()
    
     try:
-        mycursor.execute(sql, params)
-        data = mycursor.fetchall()
-   
-        return data
+        if params is not None: mycursor.execute(sql, params)
+        else: mycursor.execute(sql)
+        return mycursor.fetchall()
    
     except mysql.connector.Error as err:
         print(f"Error: {err}")
-   
         return None
    
     finally:
@@ -56,88 +54,144 @@ def insertTo(sql, vals):
     
     return id
 
+# Helper function to execute delete queries
+def deleteRecord(sql, recordID):
+    mydb = connectDB()
+    mycursor = mydb.cursor()
+    
+    try:
+        mycursor.execute(sql, (recordID,))
+        mydb.commit()
+        return True
+    
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return False
+    
+    finally:
+        mycursor.close()
+        mydb.close()
+
+# Helper function to execute update queries
+def updateRecord(sql, params):
+    mydb = connectDB()
+    mycursor = mydb.cursor()
+    
+    try:
+        mycursor.execute(sql, params)
+        mydb.commit()
+        return True
+    
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
+        return False
+    
+    finally:
+        mycursor.close()
+        mydb.close()
+
 
 ## GET QUERIES ##
 def getCreditCardQuery(cardID):
+    """Gets the data from the CreditCard table given a cardID."""
     sql = "SELECT * FROM CreditCard WHERE CardID = %s"
-    data = queryTo(sql, (cardID))
-
-    return data
+    return queryTo(sql, [cardID])
 
 def getLoginQuery(username, password):
+    """Gets the data from the Account table given a username and password."""
     sql = "SELECT * FROM Account WHERE (Username = %s AND Password = %s)"
-    data = queryTo(sql, (username, password))
-
-    return data
+    return queryTo(sql, [username, password])
 
 def getAccountQuery(accountID):
+    """Gets the data from the Account table given an accountID."""
     sql = "SELECT * FROM Account WHERE AccountID = %s"
-    data = queryTo(sql, (accountID))
-
-    return data
+    return queryTo(sql, [accountID])
 
 def getLocationQuery(locationID):
+    """Gets the data from the CreditCard table given a cardID."""
     sql = "SELECT * FROM Location WHERE LocationID = %s"
-    data = queryTo(sql, (locationID))
-
-    return data
+    return queryTo(sql, [locationID])
 
 def getRestaurantQuery(restaurantID):
+    """Gets the data from the Restaurant table given a restaurantID."""
     sql = "SELECT * FROM Restaurant WHERE RestaurantID = %s"
-    data = queryTo(sql, (restaurantID))
+    return queryTo(sql, [restaurantID])
 
-    return data
+def getAllRestaurantQuery():
+    """Gets all the data from the Restaurant table."""
+    sql = "SELECT * FROM Restaurant"
+    return queryTo(sql, None)
 
 def getFoodQuery(foodID):
+    """Gets the data from the Food table given a foodID."""
     sql = "SELECT * FROM Food WHERE FoodID = %s"
-    data = queryTo(sql, (foodID))
-
-    return data
+    return queryTo(sql, [foodID])
 
 def getOrderQuery(orderID):
     sql = "SELECT * FROM `Order` WHERE OrderID = %s"
-    data = queryTo(sql, (orderID))
-
-    return data
-
-def getReviewQuery(reviewID):
-    sql = "SELECT * FROM Review WHERE ReviewID = %s"
-    data = queryTo(sql, (reviewID))
-
-    return data
+    return queryTo(sql, [orderID])
 
 
 ## POST QUERIES ##
 def postCreditCardQuery(name, number, code, month, year):
     sql = "INSERT INTO CreditCard (NameOnCard, CardNumber, CardSecurityCode, CardExpirationMonth, CardExpirationYear) VALUES (%s, %s, %s, %s, %s)"
-    id = insertTo(sql, (name, number, code, month, year))
+    return insertTo(sql, (name, number, code, month, year))
 
 def postAccountQuery(locationId, cardId, username, password, name, phone):
     sql = "INSERT INTO Account (LocationID, CardID, Username, Password, Name, PhoneNumber) VALUES (%s, %s, %s, %s, %s, %s)"
-    id = insertTo(sql, (locationId, cardId, username, password, name, phone))
-    return id
+    return insertTo(sql, (locationId, cardId, username, password, name, phone))
 
 def postLocationQuery(buildingNumber, roomNumber):
     sql = "INSERT INTO Location (BuildingNumber, RoomNumber) VALUES (%s, %s)"
-    id = insertTo(sql, (buildingNumber, roomNumber))
-    return id
+    return insertTo(sql, (buildingNumber, roomNumber))
 
-def postRestaurantQuery(locationId, name, hours):
-    sql = "INSERT INTO Restaurant (LocationID, Name, Hours) VALUES (%s, %s, %s)"
-    id = insertTo(sql, (locationId, name, hours))
-    return id
+def postRestaurantQuery(locationId, name, hours, imagePath, numberReviews, totalReviews):
+    sql = "INSERT INTO Restaurant (LocationID, Name, Hours) VALUES (%s, %s, %s, %s, %s, %s)"
+    return insertTo(sql, (locationId, name, hours, imagePath, numberReviews, totalReviews))
 
-def postFoodQuery(restaurantId, name, description, price):
-    sql = "INSERT INTO Food (RestaurantID, Name, Description, Price) VALUES (%s, %s, %s, %s)"
-    id = insertTo(sql, (restaurantId, name, description, price))
-    return id
+def postFoodQuery(restaurantId, name, description, price, imagePath):
+    sql = "INSERT INTO Food (RestaurantID, Name, Description, Price, ImagePath) VALUES (%s, %s, %s, %s, %s)"
+    return insertTo(sql, (restaurantId, name, description, price, imagePath))
 
 def postOrderQuery(restaurantId, customerId, orderDate, totalAmount):
     sql = "INSERT INTO `Order` (RestaurantID, CustomerID, OrderDate, TotalAmount) VALUES (%s, %s, %s, %s)"
-    id = insertTo(sql, (restaurantId, customerId, orderDate, totalAmount))
-    return id
+    return insertTo(sql, (restaurantId, customerId, orderDate, totalAmount))
 
-def postReviewQuery(restaurantId, customerId, rating, comment):
-    sql = "INSERT INTO Review (RestaurantID, CustomerID, Rating, Comment) VALUES (%s, %s, %s, %s)"
-    id = insertTo(sql, (restaurantId, customerId, rating, comment))
-    return id
+
+## DELETE QUERIES ##
+def deleteCreditCardQuery(cardID):
+    sql = "DELETE FROM CreditCard WHERE CardID = %s"
+    return deleteRecord(sql, cardID)
+
+def deleteAccountQuery(accountID):
+    sql = "DELETE FROM Account WHERE AccountID = %s"
+    return deleteRecord(sql, accountID)
+
+def deleteLocationQuery(locationID):
+    sql = "DELETE FROM Location WHERE LocationID = %s"
+    return deleteRecord(sql, locationID)
+
+def deleteRestaurantQuery(restaurantID):
+    sql = "DELETE FROM Restaurant WHERE RestaurantID = %s"
+    return deleteRecord(sql, restaurantID)
+
+def deleteFoodQuery(foodID):
+    sql = "DELETE FROM Food WHERE FoodID = %s"
+    return deleteRecord(sql, foodID)
+
+def deleteOrderQuery(orderID):
+    sql = "DELETE FROM `Order` WHERE OrderID = %s"
+    return deleteRecord(sql, orderID)
+
+
+## UPDATE QUERIES ##
+def updateAccountInformation(accountID, locationId, cardId, username, password, name, phone):
+    """This will update account information given an account ID."""
+    sql = "UPDATE Account SET LocationID = %s, CardID = %s, Username = %s, Password = %s, Name = %s, PhoneNumber = %s WHERE AccountID = %s"
+    return updateRecord(sql, (locationId, cardId, username, password, name, phone, accountID))
+
+
+def updateCreditCardInformation(cardID, name, number, code, month, year):
+    """This will update credit card information given an credit card ID."""
+    sql = "UPDATE CreditCard SET NameOnCard = %s, CardNumber = %s, CardSecurityCode = %s, CardExpirationMonth = %s, CardExpirationYear = %s WHERE CardID = %s"
+    return updateRecord(sql, (name, number, code, month, year, cardID))
