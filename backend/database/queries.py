@@ -108,9 +108,14 @@ def getAccountQuery(accountID):
     return queryTo(sql, [accountID])
 
 def getLocationQuery(locationID):
-    """Gets the data from the CreditCard table given a cardID."""
+    """Gets the data from the Location table given a locationID."""
     sql = "SELECT * FROM Location WHERE LocationID = %s"
     return queryTo(sql, [locationID])
+
+def getAllLocationQuery():
+    """Gets all the data from the Location table."""
+    sql = "SELECT * FROM Location"
+    return queryTo(sql, None)
 
 def getRestaurantQuery(restaurantID):
     """Gets the data from the Restaurant table given a restaurantID."""
@@ -126,6 +131,11 @@ def getFoodQuery(foodID):
     """Gets the data from the Food table given a foodID."""
     sql = "SELECT * FROM Food WHERE FoodID = %s"
     return queryTo(sql, [foodID])
+
+def getFoodByRestaurantQuery(restaurantID):
+    """Gets the data from the Food table given a restaurantID."""
+    sql = "SELECT * FROM Food WHERE RestaurantID = %s"
+    return queryTo(sql, [restaurantID])
 
 def getOrderQuery(orderID):
     sql = "SELECT * FROM `Order` WHERE OrderID = %s"

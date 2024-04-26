@@ -1,8 +1,8 @@
 import os
 
 # flask 
-from flask import Flask, request, Response, render_template, redirect, url_for
-from database.queries import getLoginQuery, postAccountQuery
+from flask import Flask, request, Response, render_template, redirect, url_for, jsonify
+from database.queries import *
 
 # modules
 from modules.Account import Account
@@ -85,5 +85,98 @@ def createAccount():
 def home():
     pass
 
+@app.route("/restaurants-all", methods = ["GET"])
+def getRestaurants():
+    # get request
+    if request.method == "GET":
+        allRestaurants = getAllRestaurantQuery()
+        allRestaurantData = {}
+        
+        for restaurant in allRestaurants:
+            # unpackage restaurant database
+            restaurantID = restaurant[0]
+            locationID = restaurant[1]
+            restaurantName = restaurant[2]
+            hours = restaurant[3]
+            restaurantImagePath = restaurant[4]
+            numberReviews = restaurant[5]
+            totalReviewScores = restaurant[6]
+
+            # get the location data
+            allLocationData = getLocationQuery(locationID)
+            locationID = allLocationData[0]
+            buildingNumber = allLocationData[1]
+            roomNumber = allLocationData[2]
+
+            locationData = {
+                "locationID": locationID,
+                "buildingNumber": buildingNumber,
+                "roomNumber": roomNumber
+            }
+
+            # get all the restaurant's food
+            allFoodByRestaurant = getFoodByRestaurantQuery(restaurantID)
+            foodData = []
+
+            for food in allFoodByRestaurant:
+                # unpackage the food data
+                foodID = food[0]
+                restaurantID = food[1]
+                foodName = food[2]
+                description = food[3]
+                price = food[4]
+                foodImagePath = food[5]
+
+                # append food data
+                foodData.append({
+                    "foodID": foodID,
+                    "name": foodName,
+                    "description": description,
+                    "price": price,
+                    "foodImagePath": foodImagePath
+                })
+
+            # add all restaurant data to the json
+            allRestaurantData[restaurantName] = {
+                "restaurantId": restaurantID,
+                "food": foodData,
+                "hours": hours,
+                "location": locationData,
+                "reviews": {
+                    "totalReviews": numberReviews,
+                    "totalScore": totalReviewScores
+                },
+                "restaurantImagePath": restaurantImagePath
+            }
+
+        return jsonify(allRestaurantData)
+
+    # err
+    return Response( "Invalid request type", status=404)
+
+# EXTRA ENDPOINTS
+@app.route("/locations", methods = ["GET"])
+def getLocations():
+    if request.method == "GET":
+        # get all the location data
+        locations = getAllLocationQuery()
+        locationData = {}
+
+        for location in locations:
+            # unpackage database
+            locationID = int(location[0])
+            buildingNumber = location[1]
+            roomNumber = location[2]
+
+            locationData[locationID] = {
+                "buildingNumber": buildingNumber,
+                "roomNumber": roomNumber
+            }
+
+        return jsonify(locationData)
+    # err
+    return Response( "Invalid request type", status=404)
+
+# RUN
 if __name__ == "__main__":  
    app.run()

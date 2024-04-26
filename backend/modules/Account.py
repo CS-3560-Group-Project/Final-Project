@@ -1,7 +1,6 @@
 # account class
-from backend.modules import BroncoBucks
-from backend.modules import CreditCard
-from backend.modules import Location
+from modules.CreditCard import CreditCard
+from modules.Location import Location
 
 class Account:
 
@@ -38,18 +37,14 @@ class Account:
     def addCreditCard(self, creditCard: CreditCard) -> None:
         pass
 
-    # adds bronco bucks to payment
-    def addBroncoBucks(self, broncoBucks: BroncoBucks) -> None:
-        pass
-
     # returns a list of all payment methods
-    def viewPaymentMethods(self) -> 'list[BroncoBucks | CreditCard]':
+    def viewPaymentMethods(self) -> 'list[CreditCard]':
         pass
 
     # when a order is being processed, the account will be charged
     # returns true when valid payment and false if the payment
     #   does not exist or is broke
-    def processingPayment(self, paymentMethod: BroncoBucks | CreditCard) -> bool:
+    def processingPayment(self, paymentMethod: CreditCard) -> bool:
         pass
 
     

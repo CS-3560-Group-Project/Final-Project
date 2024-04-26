@@ -1,18 +1,17 @@
 # restaurant class
-from backend.modules import Food
-from backend.modules import Hours
-from backend.modules import Location
-from backend.modules import Order
-from backend.modules import Review
+from modules.Food import Food
+from modules.Location import Location
+from modules.Order import Order
 
 class Restaurant:
 
-    def __init__(self, name: str, location: Location, hours: 'list[Hours]',  food: 'list[Food]', ratings: 'list[Review]') -> None:
+    def __init__(self, name: str, location: Location, hours: str,  food: 'list[Food]', totalRating: int, totalRatingScore: int) -> None:
         self.name = name
         self.location = location
         self.hours = hours
         self.foodItems = food
-        self.ratings = ratings
+        self.totalRating = totalRating
+        self.totalRatingScore = totalRatingScore
 
     # returns an array of Food objects that belong to the class
     def getFoodItems(self) -> 'list[Food]':
