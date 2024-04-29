@@ -4,12 +4,8 @@ import os
 from flask import Flask, request, Response, render_template, redirect, url_for, jsonify
 from database.queries import *
 
-# modules
-from modules.Account import Account
-
 app = Flask(__name__)
 HTML_PATH = os.path.dirname(__file__).replace("backend", "front") + "/pages"
-ACCOUNT = Account()
 
 ## ROUTES FOR THE APP ##
 
@@ -25,57 +21,54 @@ def index():
 def login():
     # post data
     if request.method == "POST":
+        content = request.json
+
         # get form data
-        username = request.form.get("username")
-        password = request.form.get("password")
+        email = content["email"]
+        password = content["password"]
+
+        # {"email": "jaron@gmail.con", "password": "12345"}
         
-        data = getLoginQuery(username, password)
-        if len(data) > 0 and username in data and password in data:
-            # create account details
-            ACCOUNT.createAccount({
-                "accountId": data[0],
-                "locationId": data[1],
-                "cardId": data[2],
-                "username": data[3],
-                "password": data[4],
-                "name": data[5],
-                "phoneNumber": data[6]
-            })
+        data = getLoginQuery(email, password)[0]
+        if len(data) > 0 and email in data and password in data:
             # redirect
-            return redirect(url_for("home"))
+            # return redirect(url_for("home"))
+            return Response( "Logged in", status=200)
     
     # return get page
-    return render_template(f"{HTML_PATH}/login.html")
+    # return render_template(f"{HTML_PATH}/login.html")
+    return Response( "{Temporary response}", status=200)
 
 @app.route("/create-account", methods = ["GET", "POST"])
 def createAccount():
     # post data
     if request.method == "POST":
+        content = request.json
+
         # post form data
-        locationId = request.form.get("username")
-        cardId = request.form.get("username")
-        username = request.form.get("username")
-        password = request.form.get("username")
-        name = request.form.get("username")
-        phone = request.form.get("username")
+        email = content["email"]
+        password = content["password"]
+        name = content["name"]
 
-        id = postAccountQuery(locationId, cardId, username, password, name, phone)
-        if id == -1:
-            return Response("Error creating account", status=404)
+        nameOnCard = content["cardName"]
+        cardNumber = content["cardNumber"]
+        securityCode = content["cvv"]
 
-        # create account details
-        ACCOUNT.createAccount({
-            "accountId": id,
-            "locationId": locationId,
-            "cardId": cardId,
-            "username": username,
-            "password": password,
-            "name": name,
-            "phoneNumber": phone
-        })
+        cardExpiration = content["cardExpiration"]
+        cardExpirationMonth = cardExpiration[:2]
+        cardExpirationYear = cardExpiration[2:]
 
-        # redirect
-        return redirect(url_for("home"))
+        # post card id
+        cardId = postCreditCardQuery(nameOnCard, cardNumber, securityCode, cardExpirationMonth, cardExpirationYear)
+        if id != -1:
+            # post account id
+            accountId = postAccountQuery(cardId, email, password, name)
+            if id == -1:
+                return Response("Error creating account", status=404)
+
+        # redirect to home
+        # return redirect(url_for("home"))
+        return Response( "Account created", status=201)
     
     # err
     return Response( "Invalid request type", status=404)
@@ -95,7 +88,7 @@ def getRestaurants():
         for restaurant in allRestaurants:
             # unpackage restaurant database
             restaurantID = restaurant[0]
-            locationID = restaurant[1]
+            locationId = restaurant[1]
             restaurantName = restaurant[2]
             hours = restaurant[3]
             restaurantImagePath = restaurant[4]
@@ -103,13 +96,13 @@ def getRestaurants():
             totalReviewScores = restaurant[6]
 
             # get the location data
-            allLocationData = getLocationQuery(locationID)
-            locationID = allLocationData[0]
+            allLocationData = getLocationQuery(locationId)
+            locationId = allLocationData[0]
             buildingNumber = allLocationData[1]
             roomNumber = allLocationData[2]
 
             locationData = {
-                "locationID": locationID,
+                "locationId": locationId,
                 "buildingNumber": buildingNumber,
                 "roomNumber": roomNumber
             }
@@ -164,11 +157,11 @@ def getLocations():
 
         for location in locations:
             # unpackage database
-            locationID = int(location[0])
+            locationId = int(location[0])
             buildingNumber = location[1]
             roomNumber = location[2]
 
-            locationData[locationID] = {
+            locationData[locationId] = {
                 "buildingNumber": buildingNumber,
                 "roomNumber": roomNumber
             }
@@ -179,4 +172,4 @@ def getLocations():
 
 # RUN
 if __name__ == "__main__":  
-   app.run()
+   app.run(debug=True, port=8080)
