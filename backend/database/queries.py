@@ -97,10 +97,10 @@ def getCreditCardQuery(cardID):
     sql = "SELECT * FROM CreditCard WHERE CardID = %s"
     return queryTo(sql, [cardID])
 
-def getLoginQuery(username, password):
+def getLoginQuery(email, password):
     """Gets the data from the Account table given a username and password."""
-    sql = "SELECT * FROM Account WHERE (Username = %s AND Password = %s)"
-    return queryTo(sql, [username, password])
+    sql = "SELECT * FROM Account WHERE (Email = %s AND Password = %s)"
+    return queryTo(sql, [email, password])
 
 def getAccountQuery(accountID):
     """Gets the data from the Account table given an accountID."""
@@ -108,9 +108,14 @@ def getAccountQuery(accountID):
     return queryTo(sql, [accountID])
 
 def getLocationQuery(locationID):
-    """Gets the data from the CreditCard table given a cardID."""
+    """Gets the data from the Location table given a locationID."""
     sql = "SELECT * FROM Location WHERE LocationID = %s"
     return queryTo(sql, [locationID])
+
+def getAllLocationQuery():
+    """Gets all the data from the Location table."""
+    sql = "SELECT * FROM Location"
+    return queryTo(sql, None)
 
 def getRestaurantQuery(restaurantID):
     """Gets the data from the Restaurant table given a restaurantID."""
@@ -127,6 +132,16 @@ def getFoodQuery(foodID):
     sql = "SELECT * FROM Food WHERE FoodID = %s"
     return queryTo(sql, [foodID])
 
+def getFoodByRestaurantQueryId(restaurantID):
+    """Gets the data from the Food table given a restaurantID."""
+    sql = "SELECT * FROM Food WHERE RestaurantID = %s"
+    return queryTo(sql, [restaurantID])
+
+def getFoodByRestaurantQueryName(restaurantName):
+    """Gets the data from the Food table given a restaurantID."""
+    sql = "SELECT * FROM Food WHERE Name = %s"
+    return queryTo(sql, [restaurantName])
+
 def getOrderQuery(orderID):
     sql = "SELECT * FROM `Order` WHERE OrderID = %s"
     return queryTo(sql, [orderID])
@@ -137,9 +152,9 @@ def postCreditCardQuery(name, number, code, month, year):
     sql = "INSERT INTO CreditCard (NameOnCard, CardNumber, CardSecurityCode, CardExpirationMonth, CardExpirationYear) VALUES (%s, %s, %s, %s, %s)"
     return insertTo(sql, (name, number, code, month, year))
 
-def postAccountQuery(locationId, cardId, username, password, name, phone):
-    sql = "INSERT INTO Account (LocationID, CardID, Username, Password, Name, PhoneNumber) VALUES (%s, %s, %s, %s, %s, %s)"
-    return insertTo(sql, (locationId, cardId, username, password, name, phone))
+def postAccountQuery(cardId, email, password, name):
+    sql = "INSERT INTO Account (CardID, Email, Password, Name) VALUES (%s, %s, %s, %s)"
+    return insertTo(sql, (cardId, email, password, name))
 
 def postLocationQuery(buildingNumber, roomNumber):
     sql = "INSERT INTO Location (BuildingNumber, RoomNumber) VALUES (%s, %s)"
@@ -153,9 +168,9 @@ def postFoodQuery(restaurantId, name, description, price, imagePath):
     sql = "INSERT INTO Food (RestaurantID, Name, Description, Price, ImagePath) VALUES (%s, %s, %s, %s, %s)"
     return insertTo(sql, (restaurantId, name, description, price, imagePath))
 
-def postOrderQuery(restaurantId, customerId, orderDate, totalAmount):
-    sql = "INSERT INTO `Order` (RestaurantID, CustomerID, OrderDate, TotalAmount) VALUES (%s, %s, %s, %s)"
-    return insertTo(sql, (restaurantId, customerId, orderDate, totalAmount))
+def postOrderQuery(restaurantId, locationId, customerId, orderDate, totalAmount):
+    sql = "INSERT INTO `Order` (RestaurantID, LocationID, CustomerID, OrderDate, TotalAmount) VALUES (%s, %s, %s, %s, %s)"
+    return insertTo(sql, (restaurantId, locationId, customerId, orderDate, totalAmount))
 
 
 ## DELETE QUERIES ##
@@ -185,10 +200,10 @@ def deleteOrderQuery(orderID):
 
 
 ## UPDATE QUERIES ##
-def updateAccountInformation(accountID, locationId, cardId, username, password, name, phone):
+def updateAccountInformation(accountID, cardId, username, password, name, phone):
     """This will update account information given an account ID."""
-    sql = "UPDATE Account SET LocationID = %s, CardID = %s, Username = %s, Password = %s, Name = %s, PhoneNumber = %s WHERE AccountID = %s"
-    return updateRecord(sql, (locationId, cardId, username, password, name, phone, accountID))
+    sql = "UPDATE Account SET CardID = %s, Username = %s, Password = %s, Name = %s, PhoneNumber = %s WHERE AccountID = %s"
+    return updateRecord(sql, (cardId, username, password, name, phone, accountID))
 
 
 def updateCreditCardInformation(cardID, name, number, code, month, year):

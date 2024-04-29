@@ -67,16 +67,13 @@ def createTables():
     mycursor.execute("""
     CREATE TABLE Account (
         AccountID int NOT NULL AUTO_INCREMENT,
-        LocationID int NOT NULL,
         CardID int NOT NULL,
                     
-        Username VARCHAR(100) NOT NULL,
+        Email VARCHAR(100) NOT NULL,
         Password VARCHAR(100) NOT NULL,
         Name VARCHAR(100) NOT NULL,
-        PhoneNumber VARCHAR(20) NOT NULL,
                     
         PRIMARY KEY (AccountID),
-        FOREIGN KEY (LocationID) REFERENCES Location(LocationID),
         FOREIGN KEY (CardID) REFERENCES CreditCard(CardID)
     )
     """)
@@ -91,7 +88,7 @@ def createTables():
         Hours VARCHAR(50) NOT NULL,
         ImagePath VARCHAR(255) NOT NULL,  
         NumberReviews int NOT NULL,
-        TotalReviewScores int NOT NULL
+        TotalReviewScores int NOT NULL,
                     
         PRIMARY KEY (RestaurantID),
         FOREIGN KEY (LocationID) REFERENCES Location(LocationID)
@@ -119,6 +116,7 @@ def createTables():
     CREATE TABLE Orders (
         OrderID int NOT NULL AUTO_INCREMENT,
         RestaurantID int NOT NULL,
+        LocationID int NOT NULL,
         CustomerID int NOT NULL,
         
         OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -126,6 +124,7 @@ def createTables():
         
         PRIMARY KEY (OrderID),
         FOREIGN KEY (RestaurantID) REFERENCES Restaurant(RestaurantID),
+        FOREIGN KEY (LocationID) REFERENCES Location(LocationID),
         FOREIGN KEY (CustomerID) REFERENCES Account(AccountID)
     )
     """)
