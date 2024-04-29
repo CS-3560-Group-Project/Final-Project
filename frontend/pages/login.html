@@ -26,7 +26,7 @@
           <input type="password" id="loginPassword" name="loginPassword" />
           <br /><br />
 
-          <button type="submit" class="submit" onclick="storeUsername()">
+          <button type="submit" class="submit" onclick="switchToMenuPage()">
             Login
           </button>
           <button
@@ -39,6 +39,11 @@
         </form>
       </section>
     </div>
+    <script>
+      function switchToMenuPage() {
+        window.location.href = "restaurantPage.html";
+      }
+    </script>
     <script>
       function switchToCreateAccountPage() {
         window.location.href = "create.html";
