@@ -132,10 +132,15 @@ def getFoodQuery(foodID):
     sql = "SELECT * FROM Food WHERE FoodID = %s"
     return queryTo(sql, [foodID])
 
-def getFoodByRestaurantQuery(restaurantID):
+def getFoodByRestaurantQueryId(restaurantID):
     """Gets the data from the Food table given a restaurantID."""
     sql = "SELECT * FROM Food WHERE RestaurantID = %s"
     return queryTo(sql, [restaurantID])
+
+def getFoodByRestaurantQueryName(restaurantName):
+    """Gets the data from the Food table given a restaurantID."""
+    sql = "SELECT * FROM Food WHERE Name = %s"
+    return queryTo(sql, [restaurantName])
 
 def getOrderQuery(orderID):
     sql = "SELECT * FROM `Order` WHERE OrderID = %s"

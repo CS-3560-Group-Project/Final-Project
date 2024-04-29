@@ -78,8 +78,74 @@ def createAccount():
 def home():
     pass
 
-@app.route("/restaurants-all", methods = ["GET"])
+@app.route("/food", methods = "POST")
 def getRestaurants():
+    # get request
+    if request.method == "GET":
+        content = request.json
+        restaurantName = content["name"]
+
+        restaurantFood = getFoodByRestaurantQueryName(restaurantName)
+        foodData = {}
+
+        for food in restaurantFood:
+            # unpackage the food data
+            foodID = food[0]
+            restaurantID = food[1]
+            foodName = food[2]
+            description = food[3]
+            price = food[4]
+            foodImagePath = food[5]
+
+            # append food data
+            foodData[foodName] = {
+                "foodID": foodID,
+                "name": foodName,
+                "description": description,
+                "price": price,
+                "foodImagePath": foodImagePath
+            }
+
+            return jsonify(foodData)
+
+    # err
+    return Response( "Invalid request type", status=404)
+
+@app.route("/restaurant", methods = "POST")
+def getRestaurants():
+    # get request
+    if request.method == "GET":
+        allRestaurants = getAllRestaurantQuery()
+        restaurantData = {}
+
+        for restaurant in allRestaurants:
+            # unpackage restaurant database
+            restaurantID = restaurant[0]
+            locationId = restaurant[1] # not used
+            restaurantName = restaurant[2]
+            hours = restaurant[3]
+            restaurantImagePath = restaurant[4]
+            numberReviews = restaurant[5]
+            totalReviewScores = restaurant[6]
+
+            # add all restaurant data to the json
+            restaurantData[restaurantName] = {
+                "restaurantId": restaurantID,
+                "hours": hours,
+                "reviews": {
+                    "totalReviews": numberReviews,
+                    "totalScore": totalReviewScores
+                },
+                "restaurantImagePath": restaurantImagePath
+            }
+        
+        return jsonify(restaurantData)
+    
+    # err
+    return Response( "Invalid request type", status=404)
+
+@app.route("/restaurants-all", methods = ["GET"])
+def getRestaurantsAll():
     # get request
     if request.method == "GET":
         allRestaurants = getAllRestaurantQuery()
@@ -108,7 +174,7 @@ def getRestaurants():
             }
 
             # get all the restaurant's food
-            allFoodByRestaurant = getFoodByRestaurantQuery(restaurantID)
+            allFoodByRestaurant = getFoodByRestaurantQueryId(restaurantID)
             foodData = []
 
             for food in allFoodByRestaurant:
