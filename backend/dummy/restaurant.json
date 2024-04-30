@@ -1,0 +1,41 @@
+{
+    "Qdoba": {
+        "id": 0,
+        "location": {
+            "id": 0,
+            "buildingNumber": "35",
+            "roomNumber": "0"
+        },
+        "name": "Qdoba",
+        "hours": "11am-7pm",
+        "img": "https://content-service.sodexomyway.com/media/qdoba-logo_tcm146-6733_w1920_h976.jpg?url=https://www.ncatdining.com/",
+        "numberReviews": 1,
+        "totalReviewScore": 5
+    },
+    "Subway": {
+        "id": 1,
+        "location": {
+            "id": 0,
+            "buildingNumber": "35",
+            "roomNumber": "0"
+        },
+        "name": "Subway",
+        "hours": "830am-7pm",
+        "img": "https://mma.prnewswire.com/media/431103/Subway_Logo.jpg?w=200",
+        "numberReviews": 2,
+        "totalReviewScore": 13
+    },
+    "Round Table Pizza": {
+        "id": 1,
+        "location": {
+            "id": 0,
+            "buildingNumber": "35",
+            "roomNumber": "0"
+        },
+        "name": "Round Table Pizza",
+        "hours": "11am-9pm",
+        "img": "https://www.roundtablepizza.com/wp-content/uploads/2023/04/logo.svg",
+        "numberReviews": "0",
+        "totalReviewScore": "0"
+    }
+}

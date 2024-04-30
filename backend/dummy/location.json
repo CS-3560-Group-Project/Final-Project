@@ -1,0 +1,94 @@
+{
+   "locations": [
+        {
+            "id": 0,
+            "buildingNumber": "8",
+            "roomNumber": "50"
+        },
+        {
+            "id": 1,
+            "buildingNumber": "8",
+            "roomNumber": "110"
+        },
+        {
+            "id": 2,
+            "buildingNumber": "8",
+            "roomNumber": "210"
+        },
+        {
+            "id": 3,
+            "buildingNumber": "8",
+            "roomNumber": "302"
+        },
+        {
+            "id": 4,
+            "buildingNumber": "8",
+            "roomNumber": "331"
+        },
+        {
+            "id": 5,
+            "buildingNumber": "1",
+            "roomNumber": "103"
+        },
+        {
+            "id": 6,
+            "buildingNumber": "1",
+            "roomNumber": "301"
+        },
+        {
+            "id": 7,
+            "buildingNumber": "1",
+            "roomNumber": "305"
+        },
+        {
+            "id": 8,
+            "buildingNumber": "15",
+            "roomNumber": "1802"
+        },
+        {
+            "id": 9,
+            "buildingNumber": "15",
+            "roomNumber": "1828"
+        },
+        {
+            "id": 10,
+            "buildingNumber": "45",
+            "roomNumber": "126"
+        },
+        {
+            "id": 11,
+            "buildingNumber": "45",
+            "roomNumber": "153"
+        },
+        {
+            "id": 12,
+            "buildingNumber": "5",
+            "roomNumber": "240"
+        },
+        {
+            "id": 13,
+            "buildingNumber": "5",
+            "roomNumber": "244"
+        },
+        {
+            "id": 14,
+            "buildingNumber": "5",
+            "roomNumber": "255"
+        },
+        {
+            "id": 15,
+            "buildingNumber": "9",
+            "roomNumber": "219"
+        },
+        {
+            "id": 15,
+            "buildingNumber": "9",
+            "roomNumber": "239"
+        },
+        {
+            "id": 16,
+            "buildingNumber": "35",
+            "roomNumber": "0"
+        }
+   ]
+}

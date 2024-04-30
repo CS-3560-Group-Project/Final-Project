@@ -138,14 +138,13 @@ def getFoodByRestaurantQueryId(restaurantID):
     return queryTo(sql, [restaurantID])
 
 def getFoodByRestaurantQueryName(restaurantName):
-    """Gets the data from the Food table given a restaurantID."""
-    sql = "SELECT * FROM Food WHERE Name = %s"
+    """Gets the data from the Restaurant table given a restaurantID."""
+    sql = "SELECT * FROM Restaurant WHERE Name = %s"
     return queryTo(sql, [restaurantName])
 
 def getOrderQuery(orderID):
     sql = "SELECT * FROM `Order` WHERE OrderID = %s"
     return queryTo(sql, [orderID])
-
 
 ## POST QUERIES ##
 def postCreditCardQuery(name, number, code, month, year):
@@ -161,7 +160,7 @@ def postLocationQuery(buildingNumber, roomNumber):
     return insertTo(sql, (buildingNumber, roomNumber))
 
 def postRestaurantQuery(locationId, name, hours, imagePath, numberReviews, totalReviews):
-    sql = "INSERT INTO Restaurant (LocationID, Name, Hours) VALUES (%s, %s, %s, %s, %s, %s)"
+    sql = "INSERT INTO Restaurant (LocationID, Name, Hours, ImagePath, NumberReviews, TotalReviewScores) VALUES (%s, %s, %s, %s, %s, %s)"
     return insertTo(sql, (locationId, name, hours, imagePath, numberReviews, totalReviews))
 
 def postFoodQuery(restaurantId, name, description, price, imagePath):

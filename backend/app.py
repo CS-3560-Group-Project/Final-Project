@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # https://flask.palletsprojects.com/en/2.3.x/config/#SECRET_KEY
 app.secret_key = "a3898372693173f6f76191257ae22ba4416a3a067bb2ff9c4bbbd43bb4478057"
-PORT = 8000
+PORT = 5555
 HTML_PATH = os.path.dirname(__file__).replace("backend", "front") + "/pages"
 
 # Function to check if the user is logged in
@@ -111,11 +111,11 @@ def createAccount():
 ## MAIN PAGE TO SEE THE FOOD / RESTRAUNTS
 
 # This is the page where given a restaurant you can view its food
-@app.route("/<restaurant>/food/", methods = ["GET"])
-def getFood(restaurant):
+@app.route("/<restaurantId>/food/", methods = ["GET"])
+def getFood(restaurantId):
     # get request
     if request.method == "GET":
-        restaurantFood = getFoodByRestaurantQueryName(restaurant)
+        restaurantFood = getFoodByRestaurantQueryId(restaurantId)
         foodData = {}
 
         for food in restaurantFood:
@@ -136,7 +136,7 @@ def getFood(restaurant):
                 "foodImagePath": foodImagePath
             }
 
-            return jsonify(foodData)
+        return jsonify(foodData)
     # err
     return Response("Invalid request type", status=404)
 
@@ -200,30 +200,39 @@ def getLocations():
 ## CART AND ORDER API ##
 
 # This is the add to cart route to add food given a foodId
-@app.route("/addCart/<id>", methods = ["POST"])
+@app.route("/addCart/<foodId>", methods=["POST"])
 @login_required
-def addCart(foodId):
+def add_to_cart(foodId):
     if request.method == "POST":
         if "cart" not in session:
             session["cart"] = []
 
         session["cart"].append(foodId)
+        session["cart"] = session["cart"]
+        print(session["cart"])
         return Response("Item added to cart", status=200)
-    # err
-    return Response("Invalid request type", status=404)
+    else:
+        return Response("Invalid request type", status=405)  # Method Not Allowed
 
-# This is the remove from cart route to add food given a foodId
-@app.route("/removeCart/<id>", methods = ["POST"])
+# Remove from cart route
+@app.route("/removeCart/<foodId>", methods=["POST"])
 @login_required
-def removeCart(foodId):
+def remove_from_cart(foodId):   
     if request.method == "POST":
-        if "cart" in session:
+        if "cart" in session and foodId in session["cart"]:
+            new_cart = []
+            for item in range(len(session["cart"])):
+                if item != foodId: session["cart"].append(item)
+            session["cart"] = new_cart
+            print(session["cart"])
             return Response("Item removed from cart", status=200)
-        
-        return Response("Cart is empty", status=404)
-    # err
-    return Response("Invalid request type", status=404)
-
+        elif "cart" not in session:
+            return Response("Cart is empty", status=404)
+        else:
+            return Response("Item not in cart", status=404)
+    else:
+        return Response("Invalid request type", status=405)
+    
 # This route will help with seeing the food in the cart
 @app.route("/cart", methods = ["GET"])
 @login_required
