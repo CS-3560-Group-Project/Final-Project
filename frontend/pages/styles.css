@@ -30,6 +30,34 @@ body {
   border-width: 5px;
 }
 
+#accountImage {
+  display: flex;
+  position: absolute;
+  width: 150px;
+  height: auto;
+  top: 17%;
+  right: 5%;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid #374e80;
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eef5ff;
+  border-color: #374e80;
+  flex: 3 0 500px;
+  display: flex;
+  flex-direction: column;
+  margin: 5px 20px;
+  padding: 15px;
+  border-style: solid;
+  border-width: 5px;
+}
+
 .form,
 .progress,
 .check,

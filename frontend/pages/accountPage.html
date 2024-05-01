@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Creation Finished</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="login" href="credential.html" />
+    <script src="script.js"></script>
+    <link rel="icon" href="logoImg.png" type="image/x-icon" />
+  </head>
+  <body>
+    <img id="accountImage" src="img/billybronco.png" />
+    <p class="underLogo"><strong>Account Page</strong></p>
+    <br />
+    <section class="account">
+      <label for="currentName">Name: </label>
+      <br /><br />
+      <label for="currentEmail">Email: </label>
+      <br /><br />
+      <label for="currentPassword">Password: </label>
+      <br /><br />
+      <label for="cardholderName">Cardholder's Name: </label>
+      <br /><br />
+      <label for="cardNumber">Card Number: </label>
+      <br /><br />
+      <label for="expirationDate">Expiration Date: </label>
+      <br /><br />
+      <label for="CVV">CVV: </label>
+      <br /><br />
+
+      <button type="button" class="createAccount" onclick="switchToMenuPage()">
+        Return back to Menu
+      </button>
+      <br /><br />
+      <button type="button" class="createAccount" onclick="switchToMenuPage()">
+        Change Information
+      </button>
+    </section>
+    <script>
+      function switchToMenuPage() {
+        window.location.href = "restaurantPage.html";
+      }
+    </script>
+  </body>
+</html>
