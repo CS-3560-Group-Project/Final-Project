@@ -1,0 +1,50 @@
+/* CSS for the form layout */
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align items vertically */
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+.column {
+    flex-basis: 15%;
+    text-align: center;
+}
+
+.item-image img {
+    width: 150px; /* Adjust image size as needed */
+    height: auto;
+}
+
+.item,
+.price,
+.quantity,
+.total {
+    flex-basis: 15%;
+    text-align: center;
+}
+
+.item {
+    flex-basis: 30%; /* Adjust item width */
+    text-align: left;
+}
+
+.price {
+    margin-left: 20px;
+}
+
+.total {
+    margin-right: 20px;
+}
+
+input[type="number"] {
+    width: 50px;
+    text-align: center;
+}

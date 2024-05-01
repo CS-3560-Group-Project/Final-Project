@@ -3,9 +3,12 @@ from functools import wraps
 
 # flask 
 from flask import Flask, Response, session, request, render_template, redirect, url_for, jsonify
+from flask_cors import CORS, cross_origin
 from database.queries import *
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # https://flask.palletsprojects.com/en/2.3.x/config/#SECRET_KEY
 app.secret_key = "a3898372693173f6f76191257ae22ba4416a3a067bb2ff9c4bbbd43bb4478057"
@@ -235,12 +238,38 @@ def remove_from_cart(foodId):
     
 # This route will help with seeing the food in the cart
 @app.route("/cart", methods = ["GET"])
-@login_required
+# @login_required
+@cross_origin()
 def cart():
     if request.method == "GET":
-        cart_items = session.get("cart", [])
-        print(cart_items)
-        return Response("Returning a list of the cart", status=200)
+        cartItems = session.get("cart", [])
+        cartItems = {
+        "Qdoba": {
+            "location": {
+                "buildingNumber": "35",
+                "roomNumber": "0"
+            },
+            "name": "Qdoba",
+            "img": "https://content-service.sodexomyway.com/media/qdoba-logo_tcm146-6733_w1920_h976.jpg?url=https://www.ncatdining.com/",
+            "food": [
+                {
+                    "name": "Mexican Street Corn Shrimp Bowl",
+                    "description": "Citrus Lime Shrimp and new, warm Mexican Street Corn topped with chile crema, guacamole, pickled red onions, cotija cheese and chopped cilantro, served over cilantro lime rice and black beans.",
+                    "price": 11.95,
+                    "quantity": 5,
+                    "img": "https://olo-images-live.imgix.net/73/73d4977998dd4883a08d0b20108c3fca.jpeg?auto=format%2Ccompress&q=60&cs=tinysrgb&w=1050&h=699&fit=fill&fm=png32&bg=transparent&s=11bb860c592f3487a7d883aad9becd96"
+                },
+                {
+                    "name": "Cholula® Hot & Sweet Chicken Bowl",
+                    "description": "Cholula® Hot & Sweet Chicken with pico de gallo, cilantro lime rice, black beans, sour cream, and cotija cheese.",
+                    "price": 10.45,
+                    "quantity": 1,
+                    "img": "https://olo-images-live.imgix.net/89/89eea6e2b1684666afb93576c8a0f964.jpg?auto=format%2Ccompress&q=60&cs=tinysrgb&w=1050&h=699&fit=fill&fm=png32&bg=transparent&s=3da1160f0d26b5790b9c44aadf487392"
+                }
+            ]
+        }
+    }
+        return jsonify(cartItems)
     # err
     return Response("Invalid request type", status=404)
 
