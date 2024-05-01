@@ -6,14 +6,15 @@ from flask import Flask, Response, session, request, render_template, redirect, 
 from flask_cors import CORS, cross_origin
 from database.queries import *
 
-app = Flask(__name__)
+PORT = 5555
+HTML_PATH = os.path.dirname(__file__).replace("backend", "front") + "/pages"
+
+app = Flask(__name__, template_folder=HTML_PATH)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # https://flask.palletsprojects.com/en/2.3.x/config/#SECRET_KEY
 app.secret_key = "a3898372693173f6f76191257ae22ba4416a3a067bb2ff9c4bbbd43bb4478057"
-PORT = 5555
-HTML_PATH = os.path.dirname(__file__).replace("backend", "front") + "/pages"
 
 # Function to check if the user is logged in
 # The only routes that require login are the cart functionalities and the checkout / account information

@@ -57,37 +57,37 @@ function populateCart() {
                     });
                 }
             }
+
+            // Total Price element
+            var totalPriceElement = document.createElement('p');
+            totalPriceElement.textContent = 'Total Price (including 10% tax): $0.00';
+            totalPriceElement.classList.add('total-price');
+            formSection.appendChild(totalPriceElement);
+
+            // Add Place Order button
+            var placeOrderBtn = document.createElement('button');
+            placeOrderBtn.textContent = 'Place Order';
+            placeOrderBtn.addEventListener('click', placeOrder);
+            formSection.appendChild(placeOrderBtn);
+
+            // Update total price function
+            function updateTotal() {
+                var items = document.querySelectorAll('.row');
+                var totalPrice = 0;
+                items.forEach(function (item) {
+                    var price = parseFloat(item.querySelector('.price').textContent.split('$')[1]);
+                    var quantity = parseInt(item.querySelector('.quantity').value);
+                    var total = price * quantity;
+                    item.querySelector('.total').textContent = '$' + total.toFixed(2);
+                    totalPrice += total;
+                });
+                var totalWithTax = totalPrice * 1.1; // 10% tax
+                totalPriceElement.textContent = 'Total Price (including 10% tax): $' + totalWithTax.toFixed(2);
+            }
+
+            updateTotal(); // Update total price initially
         })
         .catch(error => console.error('Error fetching cart data:', error));
-
-    // Total Price element
-    var totalPriceElement = document.createElement('p');
-    totalPriceElement.textContent = 'Total Price (including 10% tax): $0.00';
-    totalPriceElement.classList.add('total-price');
-    formSection.appendChild(totalPriceElement);
-
-    // Add Place Order button
-    var placeOrderBtn = document.createElement('button');
-    placeOrderBtn.textContent = 'Place Order';
-    placeOrderBtn.addEventListener('click', placeOrder);
-    formSection.appendChild(placeOrderBtn);
-
-    // Update total price function
-    function updateTotal() {
-        var items = document.querySelectorAll('.row');
-        var totalPrice = 0;
-        items.forEach(function (item) {
-            var price = parseFloat(item.querySelector('.price').textContent.split('$')[1]);
-            var quantity = parseInt(item.querySelector('.quantity').value);
-            var total = price * quantity;
-            item.querySelector('.total').textContent = '$' + total.toFixed(2);
-            totalPrice += total;
-        });
-        var totalWithTax = totalPrice * 1.1; // 10% tax
-        totalPriceElement.textContent = 'Total Price (including 10% tax): $' + totalWithTax.toFixed(2);
-    }
-
-    updateTotal(); // Update total price initially
 }
 
 // Placeholder function for placeOrder
