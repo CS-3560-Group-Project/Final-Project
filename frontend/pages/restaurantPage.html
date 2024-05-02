@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurants</title>
+    <link rel="stylesheet" type="text/css" href="restaurantPage.css">
+</head>
+<body>
+    <header>
+        <h1>Restaurants</h1>
+    </header>
+
+    <div id="restaurant-list"></div>
+
+    <script>
+        fetch('http://localhost:5555/restaurants')
+            .then(response => response.json())
+            .then(data => {
+                const restaurants = data.restaurants;
+                const restaurantList = document.getElementById('restaurant-list');
+                restaurants.forEach(restaurant => {
+                    const restaurantItem = document.createElement('div');
+                    
+                    // Restaurant Name
+                    const restaurantName = document.createElement('h2');
+                    restaurantName.textContent = restaurant.name;
+                    restaurantItem.appendChild(restaurantName);
+
+                    // Restaurant Logo
+                    const restaurantLogo = document.createElement('img');
+                    restaurantLogo.src = restaurant.img;
+                    restaurantLogo.alt = restaurant.name + ' Logo';
+                    restaurantItem.appendChild(restaurantLogo);
+
+                    // Restaurant Hours
+                    const restaurantHours = document.createElement('p');
+                    restaurantHours.textContent = 'Hours: ' + restaurant.hours;
+                    restaurantItem.appendChild(restaurantHours);
+
+                    // View Foods Button
+                    const viewFoodsButton = document.createElement('button');
+                    viewFoodsButton.textContent = 'View Foods';
+                    viewFoodsButton.addEventListener('click', () => {
+                        window.location.href = `foods.html?restaurantId=${restaurant.id}`;
+                    });
+                    restaurantItem.appendChild(viewFoodsButton);
+
+                    restaurantList.appendChild(restaurantItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching restaurant data:', error);
+            });
+    </script>
+</body>
+</html>

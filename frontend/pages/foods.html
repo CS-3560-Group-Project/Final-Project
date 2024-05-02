@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foods</title>
+    <link rel="stylesheet" type="text/css" href="restaurantPage.css">
+</head>
+<body>
+    <header>
+    <h1>Foods</h1>
+    <header>
+    <div id="food-list"></div>
+
+    <script>
+      
+        function fetchFoodData(restaurantId) {
+            fetch(`http://localhost:5555/${restaurantId}/food/`)
+                .then(response => response.json())
+                .then(data => {
+                    const foodList = document.getElementById('food-list');
+
+
+                    data.forEach(food => {
+                        const foodElement = document.createElement('div');
+                        foodElement.innerHTML = `
+                            <h3>${food.name}</h3>
+                            <p>Description: ${food.description}</p>
+                            <p>Price: $${food.price.toFixed(2)}</p>
+                            <img src="${food.img}" alt="${food.name}" width="200">
+                        `;
+                        foodList.appendChild(foodElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching food data:', error);
+                });
+        }
+
+        // Function to extract query parameter from URL
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        // Call fetchFoodData function with the restaurantId from the query parameter
+        const restaurantId = getParameterByName('restaurantId');
+        if (restaurantId) {
+            fetchFoodData(restaurantId);
+        } else {
+            console.error('Restaurant ID not found in query parameters');
+        }
+    </script>
+</body>
+</html>
