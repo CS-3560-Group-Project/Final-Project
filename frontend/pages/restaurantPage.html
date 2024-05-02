@@ -14,44 +14,54 @@
     <div id="restaurant-list"></div>
 
     <script>
-        fetch('http://localhost:5555/restaurants')
-            .then(response => response.json())
-            .then(data => {
-                const restaurants = data.restaurants;
-                const restaurantList = document.getElementById('restaurant-list');
-                restaurants.forEach(restaurant => {
-                    const restaurantItem = document.createElement('div');
-                    
-                    // Restaurant Name
-                    const restaurantName = document.createElement('h2');
-                    restaurantName.textContent = restaurant.name;
-                    restaurantItem.appendChild(restaurantName);
+        // Function to fetch restaurant data from the API
+        function fetchRestaurantData() {
+            fetch('http://localhost:5555/restaurants')
+                .then(response => response.json())
+                .then(data => {
+                    const restaurants = data.restaurants;
+                    const restaurantList = document.getElementById('restaurant-list');
 
-                    // Restaurant Logo
-                    const restaurantLogo = document.createElement('img');
-                    restaurantLogo.src = restaurant.img;
-                    restaurantLogo.alt = restaurant.name + ' Logo';
-                    restaurantItem.appendChild(restaurantLogo);
+                    // Iterate over restaurant data and create HTML elements
+                    restaurants.forEach(restaurant => {
+                        const restaurantItem = document.createElement('div');
+                        restaurantItem.classList.add('restaurant-item');
 
-                    // Restaurant Hours
-                    const restaurantHours = document.createElement('p');
-                    restaurantHours.textContent = 'Hours: ' + restaurant.hours;
-                    restaurantItem.appendChild(restaurantHours);
+                        // Create elements to display restaurant information
+                        const nameElement = document.createElement('h2');
+                        nameElement.textContent = restaurant.name;
 
-                    // View Foods Button
-                    const viewFoodsButton = document.createElement('button');
-                    viewFoodsButton.textContent = 'View Foods';
-                    viewFoodsButton.addEventListener('click', () => {
-                        window.location.href = `foods.html?restaurantId=${restaurant.id}`;
+                        const logoElement = document.createElement('img');
+                        logoElement.src = restaurant.img;
+                        logoElement.alt = restaurant.name + ' logo';
+
+                        const hoursElement = document.createElement('p');
+                        hoursElement.textContent = 'Hours: ' + restaurant.hours;
+
+                        // Create a button to view foods for the restaurant
+                        const viewFoodsButton = document.createElement('button');
+                        viewFoodsButton.textContent = 'View Foods';
+                        viewFoodsButton.addEventListener('click', function() {
+                            window.location.href = `foods.html?restaurantId=${restaurant.restaurantId}`;
+                        });
+
+                        // Append elements to the restaurant item
+                        restaurantItem.appendChild(nameElement);
+                        restaurantItem.appendChild(logoElement);
+                        restaurantItem.appendChild(hoursElement);
+                        restaurantItem.appendChild(viewFoodsButton);
+
+                        // Append the restaurant item to the restaurant list
+                        restaurantList.appendChild(restaurantItem);
                     });
-                    restaurantItem.appendChild(viewFoodsButton);
-
-                    restaurantList.appendChild(restaurantItem);
+                })
+                .catch(error => {
+                    console.error('Error fetching restaurant data:', error);
                 });
-            })
-            .catch(error => {
-                console.error('Error fetching restaurant data:', error);
-            });
+        }
+
+        // Call fetchRestaurantData function when the page loads
+        window.onload = fetchRestaurantData;
     </script>
 </body>
 </html>
