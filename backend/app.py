@@ -214,29 +214,10 @@ def add_to_cart(foodId):
 
         session["cart"].append(foodId)
         session["cart"] = session["cart"]
-        print(session["cart"])
+        print(f"Updated cart: {session["cart"]}")
         return Response("Item added to cart", status=200)
     else:
         return Response("Invalid request type", status=405)  # Method Not Allowed
-
-# Remove from cart route
-@app.route("/removeCart/<foodId>", methods=["POST"])
-@login_required
-def remove_from_cart(foodId):   
-    if request.method == "POST":
-        if "cart" in session and foodId in session["cart"]:
-            new_cart = []
-            for item in range(len(session["cart"])):
-                if item != foodId: session["cart"].append(item)
-            session["cart"] = new_cart
-            print(session["cart"])
-            return Response("Item removed from cart", status=200)
-        elif "cart" not in session:
-            return Response("Cart is empty", status=404)
-        else:
-            return Response("Item not in cart", status=404)
-    else:
-        return Response("Invalid request type", status=405)
     
 # This route will help with seeing the food in the cart
 @app.route("/cart", methods = ["GET"])
@@ -245,33 +226,35 @@ def remove_from_cart(foodId):
 def cart():
     if request.method == "GET":
         cartItems = session.get("cart", [])
-        cartItems = {
-        "Qdoba": {
-            "location": {
-                "buildingNumber": "35",
-                "roomNumber": "0"
-            },
-            "name": "Qdoba",
-            "img": "https://content-service.sodexomyway.com/media/qdoba-logo_tcm146-6733_w1920_h976.jpg?url=https://www.ncatdining.com/",
-            "food": [
-                {
-                    "name": "Mexican Street Corn Shrimp Bowl",
-                    "description": "Citrus Lime Shrimp and new, warm Mexican Street Corn topped with chile crema, guacamole, pickled red onions, cotija cheese and chopped cilantro, served over cilantro lime rice and black beans.",
-                    "price": 11.95,
-                    "quantity": 5,
-                    "img": "https://olo-images-live.imgix.net/73/73d4977998dd4883a08d0b20108c3fca.jpeg?auto=format%2Ccompress&q=60&cs=tinysrgb&w=1050&h=699&fit=fill&fm=png32&bg=transparent&s=11bb860c592f3487a7d883aad9becd96"
-                },
-                {
-                    "name": "Cholula® Hot & Sweet Chicken Bowl",
-                    "description": "Cholula® Hot & Sweet Chicken with pico de gallo, cilantro lime rice, black beans, sour cream, and cotija cheese.",
-                    "price": 10.45,
+        cartData = {}
+        
+        # get card items
+        for cartFoodId in cartItems:
+            foodData = getFoodQuery(cartFoodId)[0]
+
+            # unpackage the food data
+            foodID = foodData[0]
+            restaurantID = foodData[1]
+            foodName = foodData[2]
+            description = foodData[3]
+            price = foodData[4]
+            foodImagePath = foodData[5]
+
+            # check if we need to update quantity
+            if foodName in cartData:
+                cartData[foodName]["quantity"] += 1
+            else:
+                # append food data
+                cartData[foodName] = {
+                    "id": foodID,
+                    "name": foodName,
+                    "description": description,
+                    "price": float(price),
                     "quantity": 1,
-                    "img": "https://olo-images-live.imgix.net/89/89eea6e2b1684666afb93576c8a0f964.jpg?auto=format%2Ccompress&q=60&cs=tinysrgb&w=1050&h=699&fit=fill&fm=png32&bg=transparent&s=3da1160f0d26b5790b9c44aadf487392"
+                    "img": foodImagePath
                 }
-            ]
-        }
-    }
-        return jsonify(cartItems)
+
+        return jsonify(cartData)
     # err
     return Response("Invalid request type", status=404)
 
