@@ -18,15 +18,15 @@
             fetch(`http://localhost:5555/${restaurantId}/food/`)
                 .then(response => response.json())
                 .then(data => {
+                    const foods = Object.values(data);
                     const foodList = document.getElementById('food-list');
 
-
-                    data.forEach(food => {
+                    foods.forEach(food => {
                         const foodElement = document.createElement('div');
                         foodElement.innerHTML = `
                             <h3>${food.name}</h3>
                             <p>Description: ${food.description}</p>
-                            <p>Price: $${food.price.toFixed(2)}</p>
+                            <p>Price: $${(food.price).toFixed(2)}</p>
                             <img src="${food.img}" alt="${food.name}" width="200">
                         `;
                         foodList.appendChild(foodElement);

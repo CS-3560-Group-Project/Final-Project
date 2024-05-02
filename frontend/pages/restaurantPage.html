@@ -19,7 +19,8 @@
             fetch('http://localhost:5555/restaurants')
                 .then(response => response.json())
                 .then(data => {
-                    const restaurants = data.restaurants;
+                    const restaurants = Object.values(data);
+                    console.log(restaurants)
                     const restaurantList = document.getElementById('restaurant-list');
 
                     // Iterate over restaurant data and create HTML elements
@@ -42,7 +43,7 @@
                         const viewFoodsButton = document.createElement('button');
                         viewFoodsButton.textContent = 'View Foods';
                         viewFoodsButton.addEventListener('click', function() {
-                            window.location.href = `foods.html?restaurantId=${restaurant.restaurantId}`;
+                            window.location.href = `foods.html?restaurantId=${restaurant.id}`;
                         });
 
                         // Append elements to the restaurant item

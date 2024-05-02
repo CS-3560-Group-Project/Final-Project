@@ -133,11 +133,11 @@ def getFood(restaurantId):
 
             # append food data
             foodData[foodName] = {
-                "foodID": foodID,
+                "id": foodID,
                 "name": foodName,
                 "description": description,
-                "price": price,
-                "foodImagePath": foodImagePath
+                "price": float(price),
+                "img": foodImagePath
             }
 
         return jsonify(foodData)
@@ -164,13 +164,14 @@ def getRestaurants():
 
             # add all restaurant data to the json
             restaurantData[restaurantName] = {
-                "restaurantId": restaurantID,
+                "name": restaurantName,
+                "id": restaurantID,
                 "hours": hours,
                 "reviews": {
                     "totalReviews": numberReviews,
                     "totalScore": totalReviewScores
                 },
-                "restaurantImagePath": restaurantImagePath
+                "img": restaurantImagePath
             }
         
         return jsonify(restaurantData)
