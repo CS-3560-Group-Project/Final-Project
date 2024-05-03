@@ -178,6 +178,36 @@ def getRestaurants():
     # err
     return Response("Invalid request type", status=404)
 
+#Page for account details
+@app.route("/accountPage", methods = ["GET"])
+def getAccount():
+    #get account data
+    if request.method == "GET":
+        acc = getAccountQuery()
+        accData = {}
+
+        for account in acc:
+            #get account database info
+            accountID = account[0]
+            cardNum = account[1]
+            email = account[2]
+            password = account[3]
+            name = account[4]
+
+            #add info to json
+            accData[name] = {
+                "name": name,
+                "email": email,
+                "password": password,
+                "name": name,
+                "card": cardNum
+            }
+
+        return jsonify(accData)
+    #error handling
+    return Response("Invalid request type", status=404)     
+
+
 # This is a route where you can get a list of all the location data 
 # This is helpful for the drop down to select where the food will go
 @app.route("/locations", methods = ["GET"])
@@ -214,7 +244,7 @@ def add_to_cart(foodId):
 
         session["cart"].append(foodId)
         session["cart"] = session["cart"]
-        print(f"Updated cart: {session["cart"]}")
+        #print(f"Updated cart: {session["cart"]}")
         return Response("Item added to cart", status=200)
     else:
         return Response("Invalid request type", status=405)  # Method Not Allowed

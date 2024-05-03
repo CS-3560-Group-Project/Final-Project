@@ -27,7 +27,7 @@ def createDatabase():
     mycursor.close() # close cursor
     mydb.close() # close database
 
-# createDatabase()
+#createDatabase()
 
 ##### CREATE TABLES #####
 
@@ -132,5 +132,5 @@ def createTables():
     mycursor.close() # close cursor
     mydb.close() # close database
 
-# createTables()
+#createTables()
 
