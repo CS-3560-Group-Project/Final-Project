@@ -183,7 +183,7 @@ def getRestaurants():
 def getAccount():
     #get account data
     if request.method == "GET":
-        acc = getAccountQuery()
+        acc = getAccountQuery(session["userId"])
         accData = {}
 
         for account in acc:
@@ -194,13 +194,25 @@ def getAccount():
             password = account[3]
             name = account[4]
 
+            #get card info query
+            card = getCreditCardQuery(cardNum)
+            cardData = {}
+            for credit in card:
+                #get credit card details
+                cardID = credit[0]
+                cardName = credit[1]
+                cardNumber = credit[2]
+                cardCode = credit[3]
+                cardExpMon = credit[4]
+                cardExpYr = credit[5]
+
             #add info to json
             accData[name] = {
                 "name": name,
                 "email": email,
                 "password": password,
                 "name": name,
-                "card": cardNum
+                "card": cardNumber
             }
 
         return jsonify(accData)
