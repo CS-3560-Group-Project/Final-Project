@@ -13,58 +13,143 @@
     <p class="underLogo"><strong>Create an Account </strong></p>
     <br />
     <section class="form">
-      <form action="create.html" method="POST">
+      <form
+        action="create.html"
+        method="POST"
+        onsubmit="return validateAndSubmitForm()"
+      >
         <label for="newName">Name: </label>
-        <input type="text" id="newName" name="newName" />
+        <input type="text" id="newName" name="newName" required minlength="2" />
         <br /><br />
         <label for="newEmail">Email: </label>
-        <input type="email" id="newEmail" name="newEmail" />
+        <input type="email" id="newEmail" name="newEmail" required />
         <br /><br />
         <label for="newPassword">Password: </label>
-        <input type="password" id="newPassword" name="newPassword" />
+        <input
+          type="password"
+          id="newPassword"
+          name="newPassword"
+          required
+          minlength="2"
+        />
         <br /><br />
         <label for="cardholderName">Cardholder's Name: </label>
         <input
           type="cardholderName"
           id="cardholderName"
           name="cardholderName"
+          required
+          minlength="2"
         />
         <br /><br />
         <label for="cardNumber">Card Number: </label>
-        <input type="cardNumber" id="cardNumber" name="cardNumber" />
+        <input
+          type="cardNumber"
+          id="cardNumber"
+          name="cardNumber"
+          required
+          minlength="16"
+          maxlength="16"
+          pattern="[0-9]{16}"
+        />
         <br /><br />
         <label for="expirationDate">Expiration Date: </label>
         <input
           type="expirationDate"
           id="expirationDate"
           name="expirationDate"
+          required
+          minlength="4"
+          maxlength="4"
+          pattern="[0-9]{4}"
+          placeholder="MMYY"
         />
         <br /><br />
         <label for="CVV">CVV: </label>
-        <input type="CVV" id="CVV" name="CVV" />
+        <input
+          type="CVV"
+          id="CVV"
+          name="CVV"
+          required
+          minlength="3"
+          maxlength="3"
+          pattern="[0-9]{3}"
+        />
         <br /><br />
-        <button type="button" class="returnLogin" onclick="switchToLoginPage()">
+        <button type="button" id="returnLogin" onclick="switchToLoginPage()">
           Go back to Login Page
         </button>
-        <button
-          type="button"
-          class="createAccount"
-          onclick="submitForm(); switchToFinalAccountPage()"
-        >
-          Create Account
-        </button>
+        <button type="submit" class="createAccount">Create Account</button>
       </form>
     </section>
+    <!--Moving to other pages-->
     <script>
       function switchToLoginPage() {
         window.location.href = "login.html";
       }
-    </script>
-    <script>
+
       function switchToFinalAccountPage() {
         window.location.href = "finishedAccount.html";
       }
     </script>
+    <!--Error Checking-->
+    <script>
+      function validateAndSubmitForm() {
+        if (validateForm()) {
+          //makes it so that the whole form needs to be valid before the user input is stored and they are moved to final account page
+          submitForm();
+          switchToFinalAccountPage();
+        }
+        return false; // Prevent the form from submitting if they do not input the correct info
+      }
+
+      function validateForm() {
+        const name = document.getElementById("newName").value;
+        const email = document.getElementById("newEmail").value;
+        const password = document.getElementById("newPassword").value;
+        const cardholderName = document.getElementById("cardholderName").value;
+        const cardNumber = document.getElementById("cardNumber").value;
+        const expirationDate = document.getElementById("expirationDate").value;
+        const cvv = document.getElementById("CVV").value;
+
+        //validation for email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          alert("Please enter a valid email address.");
+          return false;
+        }
+
+        //validation for string inputs with at least 2 characters
+        if (name.length < 2 || cardholderName.length < 2) {
+          alert(
+            "Name and Cardholder's Name must be at least 2 characters long."
+          );
+          return false;
+        }
+
+        //validation for card number length
+        if (cardNumber.length !== 16) {
+          alert("Please enter a valid 16-digit card number.");
+          return false;
+        }
+
+        //validation for expiration date format and length
+        if (!expirationDate.match(/^\d{4}$/)) {
+          alert("Please enter a valid expiration date in MMYY format.");
+          return false;
+        }
+
+        //validation for CVV length
+        if (cvv.length !== 3) {
+          alert("Please enter a valid 3-digit CVV.");
+          return false;
+        }
+
+        //all the validations are passed and form submission can proceed
+        return true;
+      }
+    </script>
+    <!--Storing User Input-->
     <script>
       function submitForm() {
         const formData = {
