@@ -13,6 +13,9 @@
     <div id="food-list"></div>
 
     <script>
+        if (!localStorage.getItem("userId")) {
+            window.location.href = "login.html"; 
+        }
       
         function fetchFoodData(restaurantId) {
             fetch(`http://localhost:5555/${restaurantId}/food/`)

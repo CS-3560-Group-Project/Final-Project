@@ -107,6 +107,11 @@ def getAccountQuery(accountID):
     sql = "SELECT * FROM Account WHERE AccountID = %s"
     return queryTo(sql, [accountID])
 
+def getAccountQueryEmail(email):
+    """Gets the data from the Account table given an email."""
+    sql = "SELECT * FROM Account WHERE Email = %s"
+    return queryTo(sql, [email])
+
 def getLocationQuery(locationID):
     """Gets the data from the Location table given a locationID."""
     sql = "SELECT * FROM Location WHERE LocationID = %s"
@@ -143,8 +148,12 @@ def getFoodByRestaurantQueryName(restaurantName):
     return queryTo(sql, [restaurantName])
 
 def getOrderQuery(orderID):
-    sql = "SELECT * FROM `Order` WHERE OrderID = %s"
+    sql = "SELECT * FROM Order WHERE OrderID = %s"
     return queryTo(sql, [orderID])
+
+def getOrderQueryByCustomer(CustomerID):
+    sql = "SELECT * FROM Order WHERE CustomerID = %s"
+    return queryTo(sql, [CustomerID])
 
 ## POST QUERIES ##
 def postCreditCardQuery(name, number, code, month, year):
@@ -193,17 +202,15 @@ def deleteFoodQuery(foodID):
     sql = "DELETE FROM Food WHERE FoodID = %s"
     return deleteRecord(sql, foodID)
 
-def deleteOrderQuery(orderID):
-    sql = "DELETE FROM `Order` WHERE OrderID = %s"
-    return deleteRecord(sql, orderID)
-
+def deleteOrderQuery(customerID):
+    sql = "DELETE FROM Order WHERE CustomerID = %s"
+    return deleteRecord(sql, customerID)
 
 ## UPDATE QUERIES ##
-def updateAccountInformation(accountID, cardId, username, password, name, phone):
+def updateAccountInformation(accountID, cardId, email, password, name):
     """This will update account information given an account ID."""
-    sql = "UPDATE Account SET CardID = %s, Username = %s, Password = %s, Name = %s, PhoneNumber = %s WHERE AccountID = %s"
-    return updateRecord(sql, (cardId, username, password, name, phone, accountID))
-
+    sql = "UPDATE Account SET CardID = %s, Email = %s, Password = %s, Name = %s WHERE AccountID = %s"
+    return updateRecord(sql, (cardId, email, password, name, accountID))
 
 def updateCreditCardInformation(cardID, name, number, code, month, year):
     """This will update credit card information given an credit card ID."""

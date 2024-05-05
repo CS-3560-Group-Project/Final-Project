@@ -7,10 +7,10 @@ from flask_cors import CORS, cross_origin
 from database.queries import *
 
 PORT = 5555
-HTML_PATH = os.path.dirname(__file__).replace("backend", "front") + "/pages"
+HTML_PATH = os.path.dirname(__file__).replace("backend", "frontend") + "/pages"
 
 app = Flask(__name__, template_folder=HTML_PATH)
-cors = CORS(app)
+CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # https://flask.palletsprojects.com/en/2.3.x/config/#SECRET_KEY
@@ -49,33 +49,18 @@ def login():
         email = content["email"]
         password = content["password"]
 
-        # {"email": "jaron@gmail.con", "password": "12345"}
+        if not email or not password:
+            return jsonify({"error": "Email and password are required."}), 400
         
-        data = getLoginQuery(email, password)[0]
-        if len(data) > 0 and email in data and password in data:
-            # add to session
-            session["loggedIn"] = True
-            session["userId"] = data[0] # index 0 is where the account id is stored
-
-            # redirect
-            # return redirect(url_for("home"))
-            return Response( "Logged in", status=200)
+        data = getLoginQuery(email, password)
+        if len(data) > 0:
+            data = data[0]
+            if email in data and password in data:
+                return jsonify({"id": data[0]}), 200
+        else:
+            return jsonify({"error": "Invalid email or password."}), 401
     
-    # return get page
-    # return render_template(f"{HTML_PATH}/login.html")
-    return Response( "{Temporary response}", status=200)
-
-# This is the logout route where you are logged out and the session is cleared
-@app.route('/logout', methods = ["GET"])
-def logout():
-    if request.method == "GET":
-        # clear session data to log out
-        session.clear()
-
-        return Response("Logged out", status=200)
-        # return redirect(url_for('index'))
-    # err
-    return Response( "Invalid request type", status=404)
+    return jsonify({"error": "Method not allowed."}), 405
 
 # This is where we create an account bassed on the frontend
 # The data comes in the from of json
@@ -95,8 +80,13 @@ def createAccount():
         securityCode = content["cvv"]
 
         cardExpiration = content["cardExpiration"]
-        cardExpirationMonth = cardExpiration[:2]
-        cardExpirationYear = cardExpiration[2:]
+        cardExpirationMonth = cardExpiration.split("/")[0]
+        cardExpirationYear = cardExpiration.split("/")[1]
+
+        # check if the data is already existing
+        accountExist = len(getAccountQueryEmail(email)) != 0
+        if accountExist:
+            return jsonify({"error": "Email already in use."}), 409
 
         # post card id
         cardId = postCreditCardQuery(nameOnCard, cardNumber, securityCode, cardExpirationMonth, cardExpirationYear)
@@ -104,13 +94,73 @@ def createAccount():
             # post account id
             accountId = postAccountQuery(cardId, email, password, name)
             if id == -1:
-                return Response("Error creating account", status=404)
+                return jsonify({"error": "Error creating account."}), 404
 
-        # redirect to home
-        # return redirect(url_for("home"))
-        return Response( "Account created", status=201)
+        return jsonify({"id": accountId}), 201
     # err
     return Response( "Invalid request type", status=404)
+
+@app.route("/update-account", methods=["POST"])
+def updateAccount():
+    # Check if it's a POST request
+    if request.method == "POST":
+        content = request.json
+
+        # Extract data from the request
+        email = content.get("email")
+        password = content.get("password")
+        name = content.get("name")
+        cardName = content.get("cardName")
+        cardNumber = content.get("cardNumber")
+        cvv = content.get("cvv")
+        cardExpiration = content.get("cardExpiration")
+        cardExpirationMonth = cardExpiration.split("/")[0]
+        cardExpirationYear = cardExpiration.split("/")[1]
+
+        print(cardExpirationMonth, cardExpirationYear)
+
+        # Check if the account exists
+        existing_account = getAccountQueryEmail(email)
+        if not existing_account:
+            return jsonify({"error": "Account does not exist."}), 404
+        existing_account = existing_account[0]
+
+        # card id
+        cardId = int(existing_account[1])
+
+        # Update the account information
+        updated_card_id = updateCreditCardInformation(cardId, cardName, cardNumber, cvv, cardExpirationMonth, cardExpirationYear)
+        if updated_card_id == -1:
+            return jsonify({"error": "Error updating credit card information."}), 500
+
+        # account id
+        accountId = int(existing_account[0])
+
+        updated_account_id = updateAccountInformation(accountId, cardId, email, password, name)
+        if updated_account_id == -1:
+            return jsonify({"error": "Error updating account information."}), 500
+
+        return jsonify({"message": "Account updated successfully."}), 204
+
+    # Return error for invalid request type
+    return jsonify({"error": "Invalid request type."}), 405
+
+@app.route('/delete-account', methods=['POST'])
+def deleteAccount():
+    data = request.json
+    accountId = data.get('id')
+
+    accountData = getAccountQuery(accountId)
+    if accountData:
+        accountData = accountData[0]
+        cardId = accountData[1]
+        orders = getOrderQueryByCustomer(accountId)
+        if deleteAccountQuery(accountId) and deleteCreditCardQuery(cardId) and (deleteOrderQuery(accountId) if orders else True):
+            return '', 204  
+    else:
+        return jsonify({"error": "Account not found"}), 404
+    
+    return jsonify({"error": "Error."}), 400
 
 ## MAIN PAGE TO SEE THE FOOD / RESTRAUNTS
 
@@ -179,30 +229,35 @@ def getRestaurants():
     return Response("Invalid request type", status=404)
 
 #Page for account details
-@app.route("/accountPage", methods = ["GET"])
+@app.route("/account-page", methods = ["POSt"])
 def getAccount():
     #get account data
-    if request.method == "GET":
-        acc = getAccountQuery(session["userId"])
-        accData = {}
+    if request.method == "POST":
+        try:
+            content = request.json
+            id = content["id"]
+            acc = getAccountQuery(id)
+            accData = {}
+        except:
+            return Response("Invalid request type", status=404)     
 
         for account in acc:
             #get account database info
             accountID = account[0]
-            cardNum = account[1]
+            cardId = account[1]
             email = account[2]
             password = account[3]
             name = account[4]
 
             #get card info query
-            card = getCreditCardQuery(cardNum)
+            card = getCreditCardQuery(cardId)
             cardData = {}
             for credit in card:
                 #get credit card details
-                cardID = credit[0]
+                cardId = credit[0]
                 cardName = credit[1]
                 cardNumber = credit[2]
-                cardCode = credit[3]
+                cvv = credit[3]
                 cardExpMon = credit[4]
                 cardExpYr = credit[5]
 
@@ -211,11 +266,13 @@ def getAccount():
                 "name": name,
                 "email": email,
                 "password": password,
-                "name": name,
-                "card": cardNumber
+                "cardholderName": cardName,
+                "cardNumber": cardNumber,
+                "expirationDate": f"{cardExpMon}/{cardExpYr}",
+                "CVV": cvv
             }
-
-        return jsonify(accData)
+        print(accData)
+        return jsonify(accData), 200
     #error handling
     return Response("Invalid request type", status=404)     
 

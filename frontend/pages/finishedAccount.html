@@ -20,6 +20,9 @@
       </button>
     </section>
     <script>
+        if (!localStorage.getItem("userId")) {
+            window.location.href = "login.html"; 
+        }
       function switchToMenuPage() {
         window.location.href = "restaurantPage.html";
       }

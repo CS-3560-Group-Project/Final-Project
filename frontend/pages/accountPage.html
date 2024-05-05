@@ -1,46 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account Creation Finished</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="login" href="credential.html" />
-    <script src="script.js"></script>
-    <link rel="icon" href="logoImg.png" type="image/x-icon" />
-  </head>
-  <body>
-    <img id="accountImage" src="img/billybronco.png" />
-    <p class="underLogo"><strong>Account Page</strong></p>
-    <br />
-    <section class="account">
-      <label for="currentName">Name: </label>
-      <br /><br />
-      <label for="currentEmail">Email: </label>
-      <br /><br />
-      <label for="currentPassword">Password: </label>
-      <br /><br />
-      <label for="cardholderName">Cardholder's Name: </label>
-      <br /><br />
-      <label for="cardNumber">Card Number: </label>
-      <br /><br />
-      <label for="expirationDate">Expiration Date: </label>
-      <br /><br />
-      <label for="CVV">CVV: </label>
-      <br /><br />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Creation Finished</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="login" href="credential.html" />
+  <link rel="icon" href="logoImg.png" type="image/x-icon" />
+</head>
+<body>
+  <img id="accountImage" src="img/billybronco.png" />
+  <p class="underLogo"><strong>Account Page</strong></p>
+  <br />
+  <section class="account">
+    <div id="accountInfo">
 
-      <button type="button" class="createAccount" onclick="switchToMenuPage()">
-        Return back to Menu
-      </button>
-      <br /><br />
-      <button type="button" class="createAccount" onclick="switchToMenuPage()">
-        Change Information
-      </button>
-    </section>
-    <script>
-      function switchToMenuPage() {
-        window.location.href = "restaurantPage.html";
+        <form id="accountForm" action="javascript:void(0);" method="POST">
+            <label for="name">Name: </label><br>
+            <input type="text" id="name" name="name"><br><br>
+            <label for="email">Email: </label><br>
+            <input type="email" id="email" name="email"><br><br>
+            <label for="password">Password: </label><br>
+            <input type="password" id="password" name="password"><br><br>
+            <label for="cardholderName">Cardholder's Name: </label><br>
+            <input type="text" id="cardholderName" name="cardholderName"><br><br>
+            <label for="cardNumber">Card Number: </label><br>
+            <input type="text" id="cardNumber" name="cardNumber"><br><br>
+            <label for="expirationDate">Expiration Date: </label><br>
+            <input type="text" id="expirationDate" name="expirationDate"><br><br>
+            <label for="CVV">CVV: </label><br>
+            <input type="text" id="CVV" name="CVV"><br><br>
+        </form>
+    </div>
+
+    <button type="button" class="createAccount" onclick="switchToMenuPage()">
+      Return back to Menu
+    </button>
+    <br /><br />
+    <button type="submit" class="submit" onclick="logout()">
+      Logout
+    </button>
+    <br /><br />
+    <button type="submit" class="submit" form="accountForm">
+      Change Information
+    </button>
+    <br /><br />
+    <button type="submit" class="submit" onclick="deleteAccount()">
+      Delete Account
+    </button>
+  </section>
+
+  <script>
+    if (!localStorage.getItem("userId")) {
+      window.location.href = "login.html"; 
+    }
+
+    function switchToMenuPage() {
+      window.location.href = "restaurantPage.html";
+    }
+
+    function deleteAccount() {
+      if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+        fetch("http://localhost:5555/delete-account", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ id: localStorage.getItem("userId") }) // Assuming userId is stored in localStorage
+        })
+        .then(response => {
+          if (response.status === 204) {
+            logout();
+          } else {
+            alert("An error occurred while deleting your account. Please try again later.");
+          }
+        })
+        .catch(error => {
+          console.error("Fetch error:", error);
+          alert("An error occurred while deleting your account. Please try again later.");
+        });
       }
-    </script>
-  </body>
+    }
+
+    function logout() {
+      localStorage.removeItem("userId");
+      window.location.href = "login.html"; 
+    }
+
+    // Fetch account information from Flask endpoint
+    fetch('http://localhost:5555/account-page', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: localStorage.getItem("userId") })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      const accountForm = document.getElementById('accountForm');
+      
+      // Assuming the response contains a single user's data nested within their username
+      const username = Object.keys(data)[0]; // Get the username
+      const account = data[username]; // Get the account info
+      
+      // Fill form fields with default values
+      for (const key in account) {
+        if (Object.hasOwnProperty.call(account, key)) {
+          const inputField = accountForm.elements[key];
+          if (inputField) {
+            inputField.value = account[key];
+          }
+        }
+      }
+    })
+    .catch(error => console.error('Error fetching account information:', error));
+
+    // listener to update
+    document.getElementById("accountForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent default form submission
+        
+        const formData = {
+          name: document.getElementById("name").value,
+          email: document.getElementById("email").value,
+          password: document.getElementById("password").value,
+          cardName: document.getElementById("cardholderName").value,
+          cardNumber: document.getElementById("cardNumber").value,
+          cardExpiration: document.getElementById("expirationDate").value,
+          cvv: document.getElementById("CVV").value,
+        };
+
+      if (!formData.name || !formData.email || !formData.password || !formData.cardName || !formData.cardNumber || !formData.cardExpiration || !formData.cvv) {
+          alert("Please enter all your information.");
+          return;
+      }
+
+        fetch("http://localhost:5555/update-account", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+        })
+        .then(response => {
+    if (response.status === 204) {
+      switchToMenuPage()
+    } else {
+        alert("An error occurred. Please try again later.");
+    }
+    })
+        .catch(error => {
+    console.error("Fetch error:", error);
+    alert("An error occurred. Please try again later.");
+        });
+    });
+  </script>
+</body>
 </html>

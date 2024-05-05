@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CPP Campus Food & Delivery</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
     <link rel="icon" href="logoImg.png" type="image/x-icon" />
   </head>
   <body>
@@ -18,15 +18,16 @@
       <p class="underLogo"><strong>Login </strong></p>
       <br />
       <section class="form">
-        <form action="login.html" method="POST">
+
+        <form id="loginForm" action="javascript:void(0);" method="POST">
           <label for="loginUsername">Email: </label>
-          <input type="text" id="loginUsername" name="loginUsername" />
+          <input type="text" id="loginUsername" name="email" />
           <br /><br />
           <label for="loginPassword">Password: </label>
-          <input type="password" id="loginPassword" name="loginPassword" />
+          <input type="password" id="loginPassword" name="password"/>
           <br /><br />
 
-          <button type="submit" class="submit" onclick="switchToMenuPage()">
+          <button type="submit" class="submit">
             Login
           </button>
           <button
@@ -40,15 +41,50 @@
       </section>
     </div>
     <script>
-      function switchToMenuPage() {
-        window.location.href = "restaurantPage.html";
-      }
-    </script>
-    <script>
-      function switchToCreateAccountPage() {
-        window.location.href = "create.html";
-      }
-    </script>
-    <script src="script.js"></script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+          event.preventDefault(); // Prevent default form submission
+          
+          const email = document.getElementById("loginUsername").value;
+          const password = document.getElementById("loginPassword").value;
+  
+          if (!email || !password) {
+            alert("Please enter both email and password.");
+            return;
+          }
+  
+          fetch("http://localhost:5555/login", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              "email": email,
+              "password": password
+            })
+          })
+          .then(response => {
+            if (response.status === 200) {
+                response.json().then(data => {
+                    // Store the ID in localStorage
+                    localStorage.setItem("userId", data.id);
+                    window.location.href = "restaurantPage.html";
+                });
+            } else if (response.status === 401) {
+              alert("Invalid email or password. Please try again.");
+            } else {
+              alert("An error occurred. Please try again later.");
+            }
+          })
+          .catch(error => {
+            console.error("Fetch error:", error);
+            alert("An error occurred. Please try again later.");
+          });
+        });
+  
+        function switchToCreateAccountPage() {
+          window.location.href = "create.html";
+        }
+      </script>
   </body>
 </html>

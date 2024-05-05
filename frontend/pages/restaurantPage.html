@@ -21,6 +21,9 @@
     <div id="restaurant-list"></div>
 
     <script>
+        if (!localStorage.getItem("userId")) {
+            window.location.href = "login.html"; 
+        }
       // Function to fetch restaurant data from the API
       function fetchRestaurantData() {
         fetch("http://localhost:5555/restaurants")

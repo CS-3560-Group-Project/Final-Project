@@ -1,186 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CPP Campus Food & Delivery</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="login" href="login.html" />
-    <script src="script.js"></script>
-    <link rel="icon" href="logoImg.png" type="image/x-icon" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>CPP Campus Food & Delivery</title>
+	<link rel="stylesheet" href="styles.css" />
+	<link rel="login" href="login.html" />
+	<link rel="icon" href="logoImg.png" type="image/x-icon" />
   </head>
   <body>
-    <p class="underLogo"><strong>Create an Account </strong></p>
-    <br />
-    <section class="form">
-      <form
-        action="create.html"
-        method="POST"
-        onsubmit="return validateAndSubmitForm()"
-      >
-        <label for="newName">Name: </label>
-        <input type="text" id="newName" name="newName" required minlength="2" />
-        <br /><br />
-        <label for="newEmail">Email: </label>
-        <input type="email" id="newEmail" name="newEmail" required />
-        <br /><br />
-        <label for="newPassword">Password: </label>
-        <input
-          type="password"
-          id="newPassword"
-          name="newPassword"
-          required
-          minlength="2"
-        />
-        <br /><br />
-        <label for="cardholderName">Cardholder's Name: </label>
-        <input
-          type="cardholderName"
-          id="cardholderName"
-          name="cardholderName"
-          required
-          minlength="2"
-        />
-        <br /><br />
-        <label for="cardNumber">Card Number: </label>
-        <input
-          type="cardNumber"
-          id="cardNumber"
-          name="cardNumber"
-          required
-          minlength="16"
-          maxlength="16"
-          pattern="[0-9]{16}"
-        />
-        <br /><br />
-        <label for="expirationDate">Expiration Date: </label>
-        <input
-          type="expirationDate"
-          id="expirationDate"
-          name="expirationDate"
-          required
-          minlength="4"
-          maxlength="4"
-          pattern="[0-9]{4}"
-          placeholder="MMYY"
-        />
-        <br /><br />
-        <label for="CVV">CVV: </label>
-        <input
-          type="CVV"
-          id="CVV"
-          name="CVV"
-          required
-          minlength="3"
-          maxlength="3"
-          pattern="[0-9]{3}"
-        />
-        <br /><br />
-        <button type="button" id="returnLogin" onclick="switchToLoginPage()">
-          Go back to Login Page
-        </button>
-        <button type="submit" class="createAccount">Create Account</button>
-      </form>
-    </section>
-    <!--Moving to other pages-->
-    <script>
-      function switchToLoginPage() {
-        window.location.href = "login.html";
-      }
-
-      function switchToFinalAccountPage() {
-        window.location.href = "finishedAccount.html";
-      }
-    </script>
-    <!--Error Checking-->
-    <script>
-      function validateAndSubmitForm() {
-        if (validateForm()) {
-          //makes it so that the whole form needs to be valid before the user input is stored and they are moved to final account page
-          submitForm();
-          switchToFinalAccountPage();
-        }
-        return false; // Prevent the form from submitting if they do not input the correct info
-      }
-
-      function validateForm() {
-        const name = document.getElementById("newName").value;
-        const email = document.getElementById("newEmail").value;
-        const password = document.getElementById("newPassword").value;
-        const cardholderName = document.getElementById("cardholderName").value;
-        const cardNumber = document.getElementById("cardNumber").value;
-        const expirationDate = document.getElementById("expirationDate").value;
-        const cvv = document.getElementById("CVV").value;
-
-        //validation for email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-          alert("Please enter a valid email address.");
-          return false;
-        }
-
-        //validation for string inputs with at least 2 characters
-        if (name.length < 2 || cardholderName.length < 2) {
-          alert(
-            "Name and Cardholder's Name must be at least 2 characters long."
-          );
-          return false;
-        }
-
-        //validation for card number length
-        if (cardNumber.length !== 16) {
-          alert("Please enter a valid 16-digit card number.");
-          return false;
-        }
-
-        //validation for expiration date format and length
-        if (!expirationDate.match(/^\d{4}$/)) {
-          alert("Please enter a valid expiration date in MMYY format.");
-          return false;
-        }
-
-        //validation for CVV length
-        if (cvv.length !== 3) {
-          alert("Please enter a valid 3-digit CVV.");
-          return false;
-        }
-
-        //all the validations are passed and form submission can proceed
-        return true;
-      }
-    </script>
-    <!--Storing User Input-->
-    <script>
-      function submitForm() {
-        const formData = {
-          name: document.getElementById("newName").value,
-          email: document.getElementById("newEmail").value,
-          password: document.getElementById("newPassword").value,
-          cardName: document.getElementById("cardholderName").value,
-          cardNumber: document.getElementById("cardNumber").value,
-          cardExpiration: document.getElementById("expirationDate").value,
-          cvv: document.getElementById("CVV").value,
-        };
-
-        fetch("/create-account", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        })
-          .then((response) => {
-            if (response.ok) {
-              console.log("Account created successfully");
-              switchToFinalAccountPage(); // After successful submission, redirect to final account page
-            } else {
-              console.error("Error creating account");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
+	<p class="underLogo"><strong>Create an Account </strong></p>
+	<br />
+	<section class="form">
+		<form id="createAccountForm" action="javascript:void(0);" method="POST">
+		<label for="newName">Name: </label>
+		<input type="text" id="newName" name="newName" />
+		<br /><br />
+		<label for="newEmail">Email: </label>
+		<input type="email" id="newEmail" name="newEmail" />
+		<br /><br />
+		<label for="newPassword">Password: </label>
+		<input type="password" id="newPassword" name="newPassword" />
+		<br /><br />
+		<label for="cardholderName">Cardholder's Name: </label>
+		<input
+		  type="cardholderName"
+		  id="cardholderName"
+		  name="cardholderName"
+		/>
+		<br /><br />
+		<label for="cardNumber">Card Number: </label>
+		<input type="cardNumber" id="cardNumber" name="cardNumber" />
+		<br /><br />
+		<label for="expirationDate">Expiration Date: </label>
+		<input
+		  type="expirationDate"
+		  id="expirationDate"
+		  name="expirationDate"
+		/>
+		<br /><br />
+		<label for="CVV">CVV: </label>
+		<input type="CVV" id="CVV" name="CVV" />
+		<br /><br />
+		<button type="button" class="returnLogin" onclick="switchToLoginPage()">
+		  Go back to Login Page
+		</button>
+		<button
+		  type="submit"
+		  class="submit"
+		>
+		  Create Account
+		</button>
+	  </form>
+	</section>
+	<script>
+		document.getElementById("createAccountForm").addEventListener("submit", function(event) {
+		  event.preventDefault(); // Prevent default form submission
+		  
+		  const formData = {
+        name: document.getElementById("newName").value,
+        email: document.getElementById("newEmail").value,
+        password: document.getElementById("newPassword").value,
+        cardName: document.getElementById("cardholderName").value,
+        cardNumber: document.getElementById("cardNumber").value,
+        cardExpiration: document.getElementById("expirationDate").value,
+        cvv: document.getElementById("CVV").value,
+			};
+  
+		if (!formData.name || !formData.email || !formData.password || !formData.cardName || !formData.cardNumber || !formData.cardExpiration || !formData.cvv) {
+			alert("Please enter all your information.");
+			return;
+		}
+  
+		  fetch("http://localhost:5555/create-account", {
+			method: "POST",
+			mode: "cors",
+			headers: {
+			  "Content-Type": "application/json"
+			},
+			body: JSON.stringify(formData)
+		  })
+		  .then(response => {
+        if (response.status === 201) {
+          response.json().then(data => {
+              // Store the ID in localStorage
+              localStorage.setItem("userId", data.id);
+              switchToFinalAccountPage();
           });
-      }
-    </script>
+        } else if (response.status === 409) {
+          alert("Account with this email already exists.");
+        } else {
+          alert("An error occurred. Please try again later.");
+        }
+        })
+		  .catch(error => {
+        console.error("Fetch error:", error);
+        alert("An error occurred. Please try again later.");
+		  });
+		});
+  
+		function switchToLoginPage() {
+		  window.location.href = "loginPage.html";
+		}
+	  </script>
+	  <script>
+		function switchToLoginPage() {
+		  window.location.href = "login.html";
+		}
+	  </script>
+	  <script>
+		function switchToFinalAccountPage() {
+		  window.location.href = "finishedAccount.html";
+		}
+	  </script>
   </body>
 </html>
