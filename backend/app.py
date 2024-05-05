@@ -339,7 +339,32 @@ def cart():
     # err
     return Response("Invalid request type", status=404)
 
+# This route will place order from cart
+@app.route("/place-order", methods=["POST"])
+def placeOrder():
+    if request.method == "POST":
+        content = request.json
 
+        # Extract order data from cart data 
+        foods = content.get("cart", {})  # Assuming cart is a dictionary of restaurant IDs and food prices
+        locationId = content.get("locationId")
+        customerId = content.get("customerId")
+
+        # Post order for each restaurant
+        for restaurantId, foodPrice in foods.items():
+            foodPrice = float(foodPrice)  # Convert string to float
+            totalAmount = foodPrice  # Total amount is the same as the food price
+
+            orderDate = datetime.datetime.now()  # Get current timestamp
+
+            # Call the function to post order to the database
+            response = postOrderQuery(restaurantId, locationId, customerId, orderDate, totalAmount)
+            if not response:
+                return jsonify({"error": "Failed to place order."}), 500
+
+        return jsonify({"message": "Order placed successfully."}), 200
+    
+    return jsonify({"error": "Invalid request type."}), 404
 
 # RUN
 if __name__ == "__main__":  
