@@ -148,11 +148,11 @@ def getFoodByRestaurantQueryName(restaurantName):
     return queryTo(sql, [restaurantName])
 
 def getOrderQuery(orderID):
-    sql = "SELECT * FROM Order WHERE OrderID = %s"
+    sql = "SELECT * FROM Orders WHERE OrderID = %s"
     return queryTo(sql, [orderID])
 
 def getOrderQueryByCustomer(CustomerID):
-    sql = "SELECT * FROM Order WHERE CustomerID = %s"
+    sql = "SELECT * FROM Orders WHERE CustomerID = %s"
     return queryTo(sql, [CustomerID])
 
 ## POST QUERIES ##
@@ -177,7 +177,7 @@ def postFoodQuery(restaurantId, name, description, price, imagePath):
     return insertTo(sql, (restaurantId, name, description, price, imagePath))
 
 def postOrderQuery(restaurantId, locationId, customerId, orderDate, totalAmount):
-    sql = "INSERT INTO `Order` (RestaurantID, LocationID, CustomerID, OrderDate, TotalAmount) VALUES (%s, %s, %s, %s, %s)"
+    sql = "INSERT INTO Orders (RestaurantID, LocationID, CustomerID, OrderDate, TotalAmount) VALUES (%s, %s, %s, %s, %s)"
     return insertTo(sql, (restaurantId, locationId, customerId, orderDate, totalAmount))
 
 
@@ -203,7 +203,7 @@ def deleteFoodQuery(foodID):
     return deleteRecord(sql, foodID)
 
 def deleteOrderQuery(customerID):
-    sql = "DELETE FROM Order WHERE CustomerID = %s"
+    sql = "DELETE FROM Orders WHERE CustomerID = %s"
     return deleteRecord(sql, customerID)
 
 ## UPDATE QUERIES ##

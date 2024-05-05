@@ -378,19 +378,18 @@ def placeOrder():
         content = request.json
 
         # Extract order data from cart data 
-        foods = content.get("cart", {})  # Assuming cart is a dictionary of restaurant IDs and food prices
+        foods = content.get("cart")  # Assuming cart is a dictionary of restaurant IDs and food prices
         locationId = content.get("locationId")
-        customerId = content.get("customerId")
+        customerId = content.get("accountId")
 
         # Post order for each restaurant
         for restaurantId, foodPrice in foods.items():
             foodPrice = float(foodPrice)  # Convert string to float
-            totalAmount = foodPrice  # Total amount is the same as the food price
 
-            orderDate = datetime.datetime.now()  # Get current timestamp
+            orderDate = datetime.now()  # Get current timestamp
 
             # Call the function to post order to the database
-            response = postOrderQuery(restaurantId, locationId, customerId, orderDate, totalAmount)
+            response = postOrderQuery(int(restaurantId), int(locationId), int(customerId), orderDate, foodPrice)
             
             if not response:
                 return jsonify({"error": "Failed to place order."}), 500
