@@ -1,5 +1,6 @@
 import os
 from functools import wraps
+from datetime import datetime
 
 # flask 
 from flask import Flask, Response, session, request, render_template, redirect, url_for, jsonify
@@ -338,59 +339,6 @@ def cart():
     # err
     return Response("Invalid request type", status=404)
 
-"""  
-
-@app.route("/place-order", methods=["POST"])
-function placeOrder:
-
-    if request.method == "POST":
-        
-        # {foodId: quantity, etc...} 
-        # assume the data looks like this
-        # {"cart" {
-                1: 3,
-                5, 1
-            },
-            "locationId": 1,
-            "id": 2 
-        } 
-        content = response.json
-
-        foods = content["foods"]
-        locationId = content["locationId"]
-        id = content["id"]
-
-        # {restaurantId: [price, price]}
-        # {1: [12.50, 32.12], 2: [1.76]}
-        restaurantData = {}
-
-        for foodID, quantity in foods.items():
-            foodData = getFoodQuery(foodID)
-            restaurantId = foodData[1]
-            foodPrice = foodData[4]
-            totalPrice = (foodPrice * quantity)
-
-            if restaurantId in restaurantData:
-                restaurantData[restaurantId].append(totalPrice)
-            else:
-                restaurantData[restaurantId] = [totalPrice]
-
-        for restaurantId, prices in restaurantData.item():
-            # postOrderQuery(restaurantId, locationId, customerId, orderDate, totalAmount)
-
-            # https://stackoverflow.com/questions/1136437/inserting-a-python-datetime-datetime-object-into-mysql
-            # import datetime
-            time = datetime....
-
-            response = postOrderQuery(restaurantId, locationId, id, time, sum(prices))
-            if response is False:
-                return invalid request 404
-
-        return 200
-    
-    return invalid request 404
-
-"""
 
 
 # RUN

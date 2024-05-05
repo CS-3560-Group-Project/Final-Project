@@ -11,8 +11,8 @@
         {
             "foodId": 1,
             "restaurantId": 0,
-            "name": "Cholula® Hot & Sweet Chicken Bowl",
-            "description": "Cholula® Hot & Sweet Chicken with pico de gallo, cilantro lime rice, black beans, sour cream, and cotija cheese.",
+            "name": "Cholula\u00ae Hot & Sweet Chicken Bowl",
+            "description": "Cholula\u00ae Hot & Sweet Chicken with pico de gallo, cilantro lime rice, black beans, sour cream, and cotija cheese.",
             "price": 10.45,
             "img": "https://olo-images-live.imgix.net/89/89eea6e2b1684666afb93576c8a0f964.jpg?auto=format%2Ccompress&q=60&cs=tinysrgb&w=1050&h=699&fit=fill&fm=png32&bg=transparent&s=3da1160f0d26b5790b9c44aadf487392"
         },

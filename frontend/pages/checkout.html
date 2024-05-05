@@ -65,16 +65,21 @@
             // Display order summary
             cart.forEach(item => {
                 const itemElement = document.createElement('div');
+                const itemName = item.name || 'Unknown'; // Default to 'Unknown' if name is undefined
+                const itemQuantity = item.quantity || 1; // Default to 1 if quantity is undefined
+                const itemPrice = item.price || 0; // Default to 0 if price is undefined
+                const totalPrice = (itemPrice * itemQuantity).toFixed(2);
+                
                 itemElement.innerHTML = `
-                    <p>Name: ${item.name}</p>
-                    <p>Price: $${(item.price * item.quantity).toFixed(2)}</p>
-                    <p>Quantity: ${item.quantity}</p>
+                    <p>Name: ${itemName}</p>
+                    <p>Quantity: ${itemQuantity}</p>
+                    <p>Price: $${totalPrice}</p>
                     <hr>
                 `;
                 orderSummaryContainer.appendChild(itemElement);
 
                 // Calculate subtotal
-                subtotal += item.price * item.quantity;
+                subtotal += itemPrice * itemQuantity;
             });
 
             // Display subtotal
