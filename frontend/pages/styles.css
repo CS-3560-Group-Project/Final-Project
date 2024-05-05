@@ -57,6 +57,18 @@ body {
   border-width: 5px;
 }
 
+#shoppingCart {
+  display: flex;
+  position: absolute;
+  width: 75px;
+  height: 75px;
+  top: 10%;
+  right: 3%;
+  border-radius: 70%;
+  overflow: hidden;
+  border: 5px solid #374e80;
+}
+
 .form,
 .progress,
 .check,

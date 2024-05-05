@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Creation Finished</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="login" href="credential.html" />
+    <script src="script.js"></script>
+    <link rel="icon" href="logoImg.png" type="image/x-icon" />
+  </head>
+  <body>
+    <p class="underLogo"><strong>Order Completed</strong></p>
+    <br />
+    <section class="finalLogin">
+      <h1>Your Order has been Successfully Processed!</h1>
+      <p>
+        You will get a notification as soon as your food is ready to be picked
+        up.
+      </p>
+      <p>Click the button to go back to the menu options</p>
+      <button type="button" class="finalPage" onclick="switchToMenuPage()">
+        Continue to Menu
+      </button>
+    </section>
+    <script>
+      function switchToMenuPage() {
+        window.location.href = "restaurantPage.html";
+      }
+    </script>
+  </body>
+</html>
