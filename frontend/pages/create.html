@@ -28,22 +28,9 @@
           minlength="2"
         />
         <br /><br />
-        <label for="newLocation">Location: </label>
-        <input
-          type="text"
-          id="newLocation"
-          name="newLocation"
-          required
-          minlength="2"
-        />
-        <label for="locations">Choose a location:</label>
-        <select id="locations">
+        <label for="newLocation">Choose a location:</label>
+        <select id="newLocation">
           <option></option>
-          <option>building 1</option>
-          <option>building 2</option>
-          <option>building 3</option>
-          <option>building 4</option>
-          <option>building 5</option>
         </select>
         <br /><br />
         <label for="cardholderName">Cardholder's Name: </label>
@@ -173,16 +160,18 @@
       fetch("http://localhost:5555/locations")
         .then((response) => response.json())
         .then((data) => {
-          const locations = data.locations;
-          const select = document.getElementById("locations");
+            const locations = Object.entries(data); 
+          const select = document.getElementById("newLocation");
 
           //go through locations array and create options
-          locations.forEach((location) => {
-            const option = document.createElement("option");
-            option.value = location.id;
-            option.textContent = `Building ${location.buildingNumber}, Room ${location.roomNumber}`;
-            select.appendChild(option);
-          });
+          locations.forEach(([buildingNumber, rooms]) => {
+            rooms.forEach(({ id, roomNumber }) => {
+                    const option = document.createElement("option");
+                    option.value = id;
+                    option.textContent = `Building ${buildingNumber}, Room ${roomNumber}`;
+                    select.appendChild(option);
+                });
+            });
         })
         .catch((error) =>
           console.error("Error fetching location data:", error)

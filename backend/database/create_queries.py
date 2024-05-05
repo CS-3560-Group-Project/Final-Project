@@ -102,7 +102,7 @@ def createTables():
         RestaurantID int NOT NULL,
         
         Name VARCHAR(50) NOT NULL,
-        Description VARCHAR(50),
+        Description VARCHAR(500),
         Price DECIMAL(10,2) NOT NULL,
         ImagePath VARCHAR(255) NOT NULL,             
         

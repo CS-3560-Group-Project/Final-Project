@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restaurants</title>
+    <link rel="stylesheet" type="text/css" href="restaurantPage.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Locations</h1>
+      <button
+        type="button"
+        class="createAccount"
+        onclick="switchToAccountPage()"
+      >
+        <img id="menuAccount" src="img/billybronco.png" />
+      </button>
+    </header>
+
+    <div id="location-list"></div>
+
+    <script>
+        if (!localStorage.getItem("userId")) {
+            window.location.href = "login.html"; 
+        }
+      // Function to fetch location data from the API
+      function fetchLocations() {
+            fetch("http://localhost:5555/locations")
+                .then((response) => response.json())
+                .then((data) => {
+                    const locations = Object.entries(data);
+                    const locationList = document.getElementById("location-list");
+
+                    // Clear the location list before adding new entries
+                    locationList.innerHTML = '';
+
+                    // Iterate over location data and create HTML elements
+                    locations.forEach(([buildingNumber, rooms]) => {
+                        const locationDiv = document.createElement("div");
+                        locationDiv.classList.add("restaurant-item");
+
+                        const buildingHeader = document.createElement("h2");
+                        buildingHeader.textContent = `Building ${buildingNumber}`;
+                        locationDiv.appendChild(buildingHeader);
+
+                        const roomsList = document.createElement("ul");
+                        rooms.forEach(({ id, roomNumber }) => {
+                            const roomItem = document.createElement("li");
+                            roomItem.textContent = `Room ${roomNumber} = ${id}`;
+                            roomsList.appendChild(roomItem);
+                        });
+
+                        locationDiv.appendChild(buildingHeader);
+                        locationDiv.appendChild(roomsList);
+                        locationList.appendChild(locationDiv);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching location data:", error);
+                });
+        }
+
+      // Call fetchLocations function when the page loads
+      window.onload = fetchLocations;
+    </script>
+    <script>
+      function switchToAccountPage() {
+        window.location.href = "accountPage.html";
+      }
+    </script>
+  </body>
+</html>

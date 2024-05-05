@@ -21,8 +21,10 @@
           <input type="email" id="email" name="email" /><br /><br />
           <label for="password">Password: </label><br />
           <input type="password" id="password" name="password" /><br /><br />
-          <label for="location">Location: </label><br />
-          <input type="location" id="location" name="location" /><br /><br />
+          <label for="location">Choose a location:</label><br /><br />
+            <select id="location">
+            <option></option>
+            </select> <br /><br />
           <label for="cardholderName">Cardholder's Name: </label><br />
           <input
             type="text"
@@ -100,6 +102,8 @@
 
       function logout() {
         localStorage.removeItem("userId");
+        localStorage.removeItem("locationId");
+        localStorage.removeItem("cart");
         window.location.href = "login.html";
       }
 
@@ -133,10 +137,32 @@
               }
             }
           }
+
+          accountForm.elements["location"].value = localStorage.getItem("locationId") 
         })
         .catch((error) =>
           console.error("Error fetching account information:", error)
         );
+
+        fetch("http://localhost:5555/locations")
+            .then((response) => response.json())
+            .then((data) => {
+                const locations = Object.entries(data); 
+            const select = document.getElementById("location");
+
+            //go through locations array and create options
+            locations.forEach(([buildingNumber, rooms]) => {
+                rooms.forEach(({ id, roomNumber }) => {
+                        const option = document.createElement("option");
+                        option.value = id;
+                        option.textContent = `Building ${buildingNumber}, Room ${roomNumber}`;
+                        select.appendChild(option);
+                    });
+                });
+            })
+            .catch((error) =>
+            console.error("Error fetching location data:", error)
+            );
 
       // listener to update
       document
@@ -178,8 +204,13 @@
             body: JSON.stringify(formData),
           })
             .then((response) => {
-              if (response.status === 204) {
-                switchToMenuPage();
+              if (response.status === 200) {
+                response.json().then((data) => {
+                    console.log("Response data:", data);
+            console.log("Updated locationId:", data.locationId);
+                  localStorage.setItem("locationId", data.locationId);
+                  switchToMenuPage();
+                });
               } else {
                 alert("An error occurred. Please try again later.");
               }

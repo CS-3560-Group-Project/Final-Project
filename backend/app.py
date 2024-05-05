@@ -75,6 +75,9 @@ def createAccount():
         password = content["password"]
         name = content["name"]
 
+        locationId = content["location"] # this is not stored in the db
+        print(locationId)
+
         nameOnCard = content["cardName"]
         cardNumber = content["cardNumber"]
         securityCode = content["cvv"]
@@ -96,7 +99,7 @@ def createAccount():
             if id == -1:
                 return jsonify({"error": "Error creating account."}), 404
 
-        return jsonify({"id": accountId}), 201
+        return jsonify({"id": accountId, "locationId": locationId}), 201
     # err
     return Response( "Invalid request type", status=404)
 
@@ -110,14 +113,13 @@ def updateAccount():
         email = content.get("email")
         password = content.get("password")
         name = content.get("name")
+        locationId = content.get("location") # this is not stored in the d
         cardName = content.get("cardName")
         cardNumber = content.get("cardNumber")
         cvv = content.get("cvv")
         cardExpiration = content.get("cardExpiration")
         cardExpirationMonth = cardExpiration[:2]
         cardExpirationYear = cardExpiration[2:]
-
-        print(cardExpirationMonth, cardExpirationYear)
 
         # Check if the account exists
         existing_account = getAccountQueryEmail(email)
@@ -139,8 +141,8 @@ def updateAccount():
         updated_account_id = updateAccountInformation(accountId, cardId, email, password, name)
         if updated_account_id == -1:
             return jsonify({"error": "Error updating account information."}), 500
-
-        return jsonify({"message": "Account updated successfully."}), 204
+        
+        return jsonify({"locationId": int(locationId)}), 200
 
     # Return error for invalid request type
     return jsonify({"error": "Invalid request type."}), 405
@@ -271,7 +273,6 @@ def getAccount():
                 "expirationDate": f"{cardExpMon}{cardExpYr}",
                 "CVV": cvv
             }
-        print(accData)
         return jsonify(accData), 200
     #error handling
     return Response("Invalid request type", status=404)     
@@ -292,10 +293,16 @@ def getLocations():
             buildingNumber = location[1]
             roomNumber = location[2]
 
-            locationData[locationId] = {
-                "buildingNumber": buildingNumber,
-                "roomNumber": roomNumber
-            }
+            if buildingNumber in locationData:
+                locationData[buildingNumber].append({
+                    "id": locationId,
+                    "roomNumber": roomNumber
+                })
+            else:
+                locationData[buildingNumber] = [{
+                    "id": locationId,
+                    "roomNumber": roomNumber
+                }]
 
         return jsonify(locationData)
     # err
@@ -356,6 +363,61 @@ def cart():
         return jsonify(cartData)
     # err
     return Response("Invalid request type", status=404)
+
+"""  
+
+@app.route("/place-order", methods=["POST"])
+function placeOrder:
+
+    if request.method == "POST":
+        
+        # {foodId: quantity, etc...} 
+        # assume the data looks like this
+        # {"cart" {
+                1: 3,
+                5, 1
+            },
+            "locationId": 1,
+            "id": 2 
+        } 
+        content = response.json
+
+        foods = content["foods"]
+        locationId = content["locationId"]
+        id = content["id"]
+
+        # {restaurantId: [price, price]}
+        # {1: [12.50, 32.12], 2: [1.76]}
+        restaurantData = {}
+
+        for foodID, quantity in foods.items():
+            foodData = getFoodQuery(foodID)
+            restaurantId = foodData[1]
+            foodPrice = foodData[4]
+            totalPrice = (foodPrice * quantity)
+
+            if restaurantId in restaurantData:
+                restaurantData[restaurantId].append(totalPrice)
+            else:
+                restaurantData[restaurantId] = [totalPrice]
+
+        for restaurantId, prices in restaurantData.item():
+            # postOrderQuery(restaurantId, locationId, customerId, orderDate, totalAmount)
+
+            # https://stackoverflow.com/questions/1136437/inserting-a-python-datetime-datetime-object-into-mysql
+            # import datetime
+            time = datetime....
+
+            response = postOrderQuery(restaurantId, locationId, id, time, sum(prices))
+            if response is False:
+                return invalid request 404
+
+        return 200
+    
+    return invalid request 404
+
+"""
+
 
 # RUN
 if __name__ == "__main__":  
