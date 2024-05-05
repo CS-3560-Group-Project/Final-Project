@@ -13,19 +13,6 @@ app = Flask(__name__, template_folder=HTML_PATH)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-# https://flask.palletsprojects.com/en/2.3.x/config/#SECRET_KEY
-app.secret_key = "a3898372693173f6f76191257ae22ba4416a3a067bb2ff9c4bbbd43bb4478057"
-
-# Function to check if the user is logged in
-# The only routes that require login are the cart functionalities and the checkout / account information
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'loggedIn' not in session or not session['loggedIn']:
-            return Response("Unauthorized", status=401)  # Return unauthorized status code
-        return f(*args, **kwargs)
-    return decorated_function
-
 ## ROUTES FOR THE APP ##
 
 # This is the landing route which reroutes depending on if you are logged in
@@ -309,33 +296,17 @@ def getLocations():
     return Response("Invalid request type", status=404)
 
 ## CART AND ORDER API ##
-
-# This is the add to cart route to add food given a foodId
-@app.route("/addCart/<foodId>", methods=["POST"])
-@login_required
-def add_to_cart(foodId):
-    if request.method == "POST":
-        if "cart" not in session:
-            session["cart"] = []
-
-        session["cart"].append(foodId)
-        session["cart"] = session["cart"]
-        #print(f"Updated cart: {session["cart"]}")
-        return Response("Item added to cart", status=200)
-    else:
-        return Response("Invalid request type", status=405)  # Method Not Allowed
     
 # This route will help with seeing the food in the cart
-@app.route("/cart", methods = ["GET"])
-# @login_required
+@app.route("/cart", methods = ["POST"])
 @cross_origin()
 def cart():
-    if request.method == "GET":
-        cartItems = session.get("cart", [])
+    if request.method == "POST":
+        content = request.json # {foodId: quantity}
         cartData = {}
         
         # get card items
-        for cartFoodId in cartItems:
+        for cartFoodId, quantity in content.items():
             foodData = getFoodQuery(cartFoodId)[0]
 
             # unpackage the food data
@@ -346,19 +317,22 @@ def cart():
             price = foodData[4]
             foodImagePath = foodData[5]
 
-            # check if we need to update quantity
-            if foodName in cartData:
-                cartData[foodName]["quantity"] += 1
-            else:
-                # append food data
-                cartData[foodName] = {
-                    "id": foodID,
-                    "name": foodName,
-                    "description": description,
-                    "price": float(price),
-                    "quantity": 1,
-                    "img": foodImagePath
-                }
+            restaurantData = getRestaurantQuery(restaurantID)[0]
+            restaurantName = restaurantData[2]
+
+            # append food data
+            cartData[foodName] = {
+                "id": foodID,
+                "name": foodName,
+                "restaurant": {
+                    "id": restaurantID,
+                    "name": restaurantName
+                },
+                "description": description,
+                "price": float(price),
+                "quantity": int(quantity),
+                "img": foodImagePath
+            }
 
         return jsonify(cartData)
     # err
