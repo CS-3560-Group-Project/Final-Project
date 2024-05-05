@@ -80,8 +80,8 @@ def createAccount():
         securityCode = content["cvv"]
 
         cardExpiration = content["cardExpiration"]
-        cardExpirationMonth = cardExpiration.split("/")[0]
-        cardExpirationYear = cardExpiration.split("/")[1]
+        cardExpirationMonth = cardExpiration[:2]
+        cardExpirationYear = cardExpiration[2:]
 
         # check if the data is already existing
         accountExist = len(getAccountQueryEmail(email)) != 0
@@ -114,8 +114,8 @@ def updateAccount():
         cardNumber = content.get("cardNumber")
         cvv = content.get("cvv")
         cardExpiration = content.get("cardExpiration")
-        cardExpirationMonth = cardExpiration.split("/")[0]
-        cardExpirationYear = cardExpiration.split("/")[1]
+        cardExpirationMonth = cardExpiration[:2]
+        cardExpirationYear = cardExpiration[2:]
 
         print(cardExpirationMonth, cardExpirationYear)
 
@@ -268,7 +268,7 @@ def getAccount():
                 "password": password,
                 "cardholderName": cardName,
                 "cardNumber": cardNumber,
-                "expirationDate": f"{cardExpMon}/{cardExpYr}",
+                "expirationDate": f"{cardExpMon}{cardExpYr}",
                 "CVV": cvv
             }
         print(accData)
