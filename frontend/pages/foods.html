@@ -32,7 +32,7 @@
                             <p>Description: ${food.description}</p>
                             <p>Price: $${(food.price).toFixed(2)}</p>
                             <img src="${food.img}" alt="${food.name}" width="200">
-                            <button onclick="addToCart('${food.name}', ${food.price})">Add to Cart</button>
+                            <button onclick="addToCart('${food.id}')">Add to Cart</button>
                         `;
                         foodList.appendChild(foodElement);
                     });
@@ -42,13 +42,15 @@
                 });
         }
         //Function to add each food to cart
-        function addToCart(name, price) {
-            const cartItem = {
-                name: name,
-                price: price
-            };
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart.push(cartItem);
+        function addToCart(foodId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || {};
+            // update quantity
+            if (cart.hasOwnProperty(foodId)) {
+                cart[foodId] = cart[foodId] + 1
+            }
+            else {
+                cart[foodId] = 1
+            }
             localStorage.setItem('cart', JSON.stringify(cart));
             alert(`${name} added to cart!`);
         }

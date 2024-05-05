@@ -42,6 +42,8 @@
     <script>
         // Retrieve cart items from localStorage
         const cart = JSON.parse(localStorage.getItem('checkoutCart')) || [];
+        const locationId = localStorage.getItem('locationId');
+        const accountId = localStorage.getItem('userId');
 
         // Get reference to elements
         const orderSummaryContainer = document.getElementById('order-summary');
@@ -50,6 +52,8 @@
         const finalTotalContainer = document.getElementById('final-total');
         const locationInfoContainer = document.getElementById('location-info');
         const creditCardInfoContainer = document.getElementById('credit-card-info');
+
+        var restaurants = [];
 
         // Function to display order summary, subtotal, tip, and final total
         function displayOrderSummary() {
@@ -79,7 +83,11 @@
                 orderSummaryContainer.appendChild(itemElement);
 
                 // Calculate subtotal
-                subtotal += itemPrice * itemQuantity;
+                subtotal += item.price * item.quantity;
+
+                if (!restaurants.includes(item.restaurant.id)) {
+                    restaurants.push(item.restaurant.id);
+                }
             });
 
             // Display subtotal
@@ -113,8 +121,7 @@
         // Call the displayOrderSummary function when the page loads
         window.onload = function() {
             displayOrderSummary();
-            displayLocation();
-            displayCreditCardInfo();
+            displayInfo();
         };
 
         // Function to update tip amount
@@ -141,43 +148,66 @@
         // Function to proceed to checkout
         function proceedToCheckout() {
             // Store order information in localStorage
-            const orderInfo = {
-                orderSummary: orderSummaryContainer.innerHTML,
-                subtotal: subtotalContainer.innerHTML,
-                tip: tipContainer.innerHTML,
-                finalTotal: finalTotalContainer.innerHTML,
-                locationInfo: locationInfoContainer.innerHTML,
-                creditCardInfo: creditCardInfoContainer.innerHTML
-            };
-            localStorage.setItem('lastOrder', JSON.stringify(orderInfo));
+            let tip = parseFloat(tipContainer.innerHTML.match(/\d+\.\d+/)[0])/(restaurants.length);
 
-            // Redirect to checkoutCompleted.html
-            window.location.href = "checkoutCompleted.html";
-        }
+            const checkoutData = {}
+            cart.forEach(food => {
+                let restaurantId = food.restaurant.id;
+                let total = (parseFloat(food.price) * parseFloat(food.quantity) + tip).toFixed(2);
+                console.log(total)
 
-        // Function to display location information
-        function displayLocation() {
-            const locationId = localStorage.getItem('locationId');
-            if (locationId) {
-                // Assuming location data is stored in localStorage as an object
-                const locationData = JSON.parse(localStorage.getItem('locationData'));
-                if (locationData) {
-                    locationInfoContainer.innerHTML = `<p>Location: ${locationData.locationName}</p>`;
+                if (checkoutData.hasOwnProperty(restaurantId)) {
+                    let temp = parseFloat(checkoutData[restaurantId]) + parseFloat(total);
+                    checkoutData[restaurantId] = temp;
+                } else {
+                    checkoutData[restaurantId] = total;
                 }
-            }
+            });
+            checkoutData["locationId"] = locationId;
+            checkoutData["accountId"] = accountId;
+
+            console.log(checkoutData)
+            localStorage.removeItem("cart")
+            localStorage.removeItem("checkoutCart")
+            localStorage.setItem("checkoutCart", JSON.stringify([{}]))
+            localStorage.setItem("cart", JSON.stringify({}))
+            // Redirect to checkoutCompleted.html
+            // window.location.href = "checkoutCompleted.html";
         }
 
-        // Function to display credit card information
-        function displayCreditCardInfo() {
-            const creditCardData = JSON.parse(localStorage.getItem('creditCardData'));
-            if (creditCardData) {
+        function displayInfo() {
+            fetch("http://localhost:5555/checkout-data", {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "locationId": locationId,
+                    "accountId": accountId
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Network response was not ok.');
+                }
+            })
+            .then(data => {
+                locationInfoContainer.innerHTML = `<p>Location: Building ${data.buildingNumber}, Room ${data.roomNumber}</p>`;
                 creditCardInfoContainer.innerHTML = `
-                    <p>Cardholder's Name: ${creditCardData.cardholderName}</p>
-                    <p>Card Number: ${creditCardData.cardNumber}</p>
-                    <p>Expiration Date: ${creditCardData.expirationDate}</p>
+                    <p>Cardholder's Name: ${data.cardName}</p>
+                    <p>Card Number: ${data.cardNumber}</p>
+                    <p>Expiration Date: ${data.cardExpiration}</p>
                 `;
-            }
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+                alert("An error occurred. Please try again later.");
+            });
         }
+
     </script>
 </body>
 </html>

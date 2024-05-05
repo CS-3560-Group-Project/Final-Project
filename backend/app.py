@@ -339,7 +339,39 @@ def cart():
     # err
     return Response("Invalid request type", status=404)
 
-# This route will place order from cart
+@app.route("/checkout-data", methods = ["POST"])
+@cross_origin()
+def checkoutData():
+    if request.method == "POST":
+        content = request.json
+
+        locationId = content.get("locationId")
+        accountId = content.get("accountId")
+
+        locationData = getLocationQuery(locationId)[0]
+        buildingNumber = locationData[1]
+        roomNumber = locationData[2]
+
+        accountData = getAccountQuery(accountId)[0]
+        cardId = accountData[1]
+
+        cardData = getCreditCardQuery(cardId)[0]
+        cardName = cardData[1]
+        cardNumber = cardData[2]
+        cardExpirationMonth = cardData[4]
+        cardExpirationYear= cardData[5]
+
+        checkoutData = {
+            "buildingNumber": buildingNumber,
+            "roomNumber": roomNumber,
+            "cardName": cardName,
+            "cardNumber": cardNumber,
+            "cardExpiration": f"{cardExpirationMonth}{cardExpirationYear}"
+        }
+
+        return jsonify(checkoutData), 200
+
+# This route will place order from checkout cart data
 @app.route("/place-order", methods=["POST"])
 def placeOrder():
     if request.method == "POST":
@@ -359,6 +391,7 @@ def placeOrder():
 
             # Call the function to post order to the database
             response = postOrderQuery(restaurantId, locationId, customerId, orderDate, totalAmount)
+            
             if not response:
                 return jsonify({"error": "Failed to place order."}), 500
 

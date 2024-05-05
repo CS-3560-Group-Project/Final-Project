@@ -125,8 +125,11 @@
               if (response.status === 201) {
                 response.json().then((data) => {
                   // Store the ID in localStorage
+                  localStorage.clear()
                   localStorage.setItem("userId", data.id);
                   localStorage.setItem("locationId", data.locationId);
+                    localStorage.setItem("checkoutCart", JSON.stringify([{}]))
+                    localStorage.setItem("cart", JSON.stringify({}))
                   switchToFinalAccountPage();
                 });
               } else if (response.status === 409) {

@@ -30,7 +30,6 @@
           .then((response) => response.json())
           .then((data) => {
             const restaurants = Object.values(data);
-            console.log(restaurants);
             const restaurantList = document.getElementById("restaurant-list");
 
             // Iterate over restaurant data and create HTML elements
