@@ -33,7 +33,11 @@
         Return back to Menu
       </button>
       <br /><br />
-      <button type="button" class="createAccount" onclick="switchToMenuPage()">
+      <button
+        type="button"
+        class="createAccount"
+        onclick="switchToMenuPage(); submitForm()"
+      >
         Change Information
       </button>
     </section>
@@ -41,6 +45,37 @@
       function switchToMenuPage() {
         window.location.href = "restaurantPage.html";
       }
+    </script>
+    <script>
+      function submitForm() {
+        const formData = {
+          name: document.getElementByID("name").value,
+          email: document.getElementByID("email").value,
+          password: document.getElementByID("password").value,
+          cardName: document.getElementByID("cardName").value,
+          cardNumber: document.getElementByID("cardNumber").value,
+          cardExpiration: document.getElementByID("cardExpiration").value,
+          cvv: document.getElementByID("cvv").value,
+        };
+      }
+
+      fetch("/create-account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("Account created successfully");
+          } else {
+            console.error("Error creating account");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     </script>
   </body>
 </html>
