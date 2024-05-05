@@ -153,10 +153,12 @@
             const checkoutData = {}
             cart.forEach(food => {
                 let restaurantId = food.restaurant.id;
-                let total = (food.price * food.quantity + tip).toFixed(2);
+                let total = (parseFloat(food.price) * parseFloat(food.quantity) + tip).toFixed(2);
+                console.log(total)
 
-                if (checkoutData.hasOwnProperty("restaurantId")) {
-                    checkoutData[restaurantId] += total;
+                if (checkoutData.hasOwnProperty(restaurantId)) {
+                    let temp = parseFloat(checkoutData[restaurantId]) + parseFloat(total);
+                    checkoutData[restaurantId] = temp;
                 } else {
                     checkoutData[restaurantId] = total;
                 }
