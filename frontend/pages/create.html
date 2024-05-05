@@ -23,15 +23,35 @@
         <label for="newPassword">Password: </label>
         <input type="password" id="newPassword" name="newPassword" />
         <br /><br />
+        <label for="cardholderName">Cardholder's Name: </label>
+        <input
+          type="cardholderName"
+          id="cardholderName"
+          name="cardholderName"
+        />
+        <br /><br />
+        <label for="cardNumber">Card Number: </label>
+        <input type="cardNumber" id="cardNumber" name="cardNumber" />
+        <br /><br />
+        <label for="expirationDate">Expiration Date: </label>
+        <input
+          type="expirationDate"
+          id="expirationDate"
+          name="expirationDate"
+        />
+        <br /><br />
+        <label for="CVV">CVV: </label>
+        <input type="CVV" id="CVV" name="CVV" />
+        <br /><br />
         <button type="button" class="returnLogin" onclick="switchToLoginPage()">
           Go back to Login Page
         </button>
         <button
           type="button"
           class="createAccount"
-          onclick="switchToCreateAccountPage()"
+          onclick="switchToFinalAccountPage()"
         >
-          Continue
+          Create Account
         </button>
       </form>
     </section>
@@ -41,8 +61,8 @@
       }
     </script>
     <script>
-      function switchToCreateAccountPage() {
-        window.location.href = "credential.html";
+      function switchToFinalAccountPage() {
+        window.location.href = "finishedAccount.html";
       }
     </script>
   </body>

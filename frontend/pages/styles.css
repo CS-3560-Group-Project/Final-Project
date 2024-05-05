@@ -33,11 +33,10 @@ body {
 #accountImage {
   display: flex;
   position: absolute;
-  width: 150px;
-  height: auto;
-  top: 17%;
-  right: 5%;
-  height: 150px;
+  width: 75px;
+  height: 75px;
+  top: 1%;
+  right: 3%;
   border-radius: 50%;
   overflow: hidden;
   border: 5px solid #374e80;
