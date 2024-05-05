@@ -203,6 +203,7 @@ button {
   transition: background-color 0.3s;
   padding: 10px 10px;
   border-radius: 17px;
+  cursor: pointer;
 }
 
 #weightInputs,
@@ -319,4 +320,5 @@ ul {
   border-radius: 50%;
   overflow: hidden;
   border: 5px solid #374e80;
+  cursor: pointer;
 }

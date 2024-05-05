@@ -9,13 +9,21 @@
   <body>
     <header>
       <h1>Restaurants</h1>
+
+      <button type="button" 
+        onclick="goToShoppingCart()">
+          Shopping Cart
+      </button>
+      
       <button
         type="button"
         class="createAccount"
-        onclick="switchToAccountPage()"
-      >
-        <img id="menuAccount" src="img/billybronco.png" />
+        onclick="switchToAccountPage()">
+          Account
       </button>
+      
+      <img id="menuAccount" src="img/billybronco.png" onclick="switchToAccountPage()"/>
+
     </header>
 
     <div id="restaurant-list"></div>
@@ -24,6 +32,11 @@
         if (!localStorage.getItem("userId")) {
             window.location.href = "login.html"; 
         }
+
+        function goToShoppingCart() {
+          window.location.href = "shoppingCart.html";
+        } 
+
       // Function to fetch restaurant data from the API
       function fetchRestaurantData() {
         fetch("http://localhost:5555/restaurants")

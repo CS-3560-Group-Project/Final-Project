@@ -10,14 +10,28 @@
     <header>
         <h1>Foods</h1>
     </header>
-    <button onclick="returnToRestaurantPage()">Back to Restaurant Page</button>
+    
+    <button 
+        onclick="returnToRestaurantPage()">
+            Back to Restaurant Page
+    </button>
+
+    <button type="button" 
+        onclick="goToShoppingCart()">
+            Shopping Cart
+    </button>
+    
     <div id="food-list"></div>
 
     <script>
         if (!localStorage.getItem("userId")) {
             window.location.href = "login.html"; 
         }
-      
+        
+        function goToShoppingCart() {
+            window.location.href = "shoppingCart.html";
+        }
+
         function fetchFoodData(restaurantId) {
             fetch(`http://localhost:5555/${restaurantId}/food/`)
                 .then(response => response.json())
