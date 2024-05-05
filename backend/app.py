@@ -339,6 +339,91 @@ def cart():
     # err
     return Response("Invalid request type", status=404)
 
+@app.route("/checkout-data", methods = ["POST"])
+@cross_origin()
+def checkoutData():
+    if request.method == "POST":
+        content = request.json
+
+        locationId = content.get("locationId")
+        accountId = content.get("accountId")
+
+        locationData = getLocationQuery(locationId)[0]
+        buildingNumber = locationData[1]
+        roomNumber = locationData[2]
+
+        accountData = getAccountQuery(accountId)[0]
+        cardId = accountData[1]
+
+        cardData = getCreditCardQuery(cardId)[0]
+        cardName = cardData[1]
+        cardNumber = cardData[2]
+        cardExpirationMonth = cardData[4]
+        cardExpirationYear= cardData[5]
+
+        checkoutData = {
+            "buildingNumber": buildingNumber,
+            "roomNumber": roomNumber,
+            "cardName": cardName,
+            "cardNumber": cardNumber,
+            "cardExpiration": f"{cardExpirationMonth}{cardExpirationYear}"
+        }
+
+        return jsonify(checkoutData), 200
+
+"""  
+
+@app.route("/place-order", methods=["POST"])
+function placeOrder:
+
+    if request.method == "POST":
+        
+        # {foodId: quantity, etc...} 
+        # assume the data looks like this
+        # {"cart" {
+                1: 3,
+                5, 1
+            },
+            "locationId": 1,
+            "id": 2 
+        } 
+        content = response.json
+
+        foods = content["foods"]
+        locationId = content["locationId"]
+        id = content["id"]
+
+        # {restaurantId: [price, price]}
+        # {1: [12.50, 32.12], 2: [1.76]}
+        restaurantData = {}
+
+        for foodID, quantity in foods.items():
+            foodData = getFoodQuery(foodID)
+            restaurantId = foodData[1]
+            foodPrice = foodData[4]
+            totalPrice = (foodPrice * quantity)
+
+            if restaurantId in restaurantData:
+                restaurantData[restaurantId].append(totalPrice)
+            else:
+                restaurantData[restaurantId] = [totalPrice]
+
+        for restaurantId, prices in restaurantData.item():
+            # postOrderQuery(restaurantId, locationId, customerId, orderDate, totalAmount)
+
+            # https://stackoverflow.com/questions/1136437/inserting-a-python-datetime-datetime-object-into-mysql
+            # import datetime
+            time = datetime....
+
+            response = postOrderQuery(restaurantId, locationId, id, time, sum(prices))
+            if response is False:
+                return invalid request 404
+
+        return 200
+    
+    return invalid request 404
+
+"""
 
 
 # RUN

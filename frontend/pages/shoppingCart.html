@@ -21,17 +21,17 @@
     <button type="button" onclick="returnToFoodPage()">Back to Food Page</button>
 
     <section class="form">
+        <div id="cart-items"></div>
+        <div id="subtotal"></div>
         <p id="emptyCartMessage"></p>
         <button type="button" onclick="clearCart()">Clear Cart</button>
         <button id="checkoutButton" type="button" onclick="checkout()">Checkout</button>
     </section>
 
-    <div id="cart-items"></div>
-    <div id="subtotal"></div>
-
     <script>
         // Retrieve cart items from localStorage
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+        var cartData = {};
 
         const cartItemsContainer = document.getElementById('cart-items');
         const subtotalContainer = document.getElementById('subtotal');
@@ -43,7 +43,7 @@
             cartItemsContainer.innerHTML = '';
             subtotalContainer.innerHTML = '';
 
-            let subtotal = 0;
+            var subtotal = 0;
 
             if (cart.length === 0) {
                 emptyCartMessage.textContent = 'Cart is empty.';
@@ -52,47 +52,71 @@
 
             emptyCartMessage.textContent = '';
 
-            // Loop through each item in the cart
-            cart.forEach((item, index) => {
-                const itemElement = document.createElement('div');
-                itemElement.innerHTML = `
-                    <p>Name: ${item.name}</p>
-                    <p>Quantity: ${item.quantity || 1}</p>
-                    <p>Price: $${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
-                    <label for="quantity-${index}">Quantity:</label>
-                    <input type="number" id="quantity-${index}" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
-                    <button onclick="removeItem(${index})">Remove Item</button>
-                    <hr>
-                `;
-                cartItemsContainer.appendChild(itemElement);
-                subtotal += item.price * item.quantity;
+            // fetch food data about cart
+            fetch("http://localhost:5555/cart", {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                "Content-Type": "application/json"
+                },
+                body: JSON.stringify(cart)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    response.json().then(data => {
+                        cartData = Object.values(data);
+                        // Loop through each item in the cart
+                        cartData.forEach(food => {
+                            const itemElement = document.createElement('div');
+                            itemElement.innerHTML = `
+                                <img src=${food.img} width="200" height="200">
+                                <p>Name: ${food.name}</p>
+                                <p>Quantity: ${food.quantity}</p>
+                                <p>Price: $${(food.price * food.quantity).toFixed(2)}</p>
+                                <label for="quantity-${food.id}">Quantity:</label>
+                                <input type="number" id="quantity-${food.id}" value="${food.quantity}" min="1" onchange="updateQuantity(${food.id}, this.value)">
+                                <button onclick="removeItem(${food.id})">Remove Item</button>
+                                <hr>
+                            `;
+                            cartItemsContainer.appendChild(itemElement);
+                            subtotal += food.price * food.quantity;
+                        });
+                        // Display the subtotal
+                        subtotalContainer.innerHTML = `<p>Subtotal: $${subtotal.toFixed(2)}</p>`;
+                    });
+                } else {
+                alert("An error occurred. Please try again later.");
+                }
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+                alert("An error occurred. Please try again later.");
             });
-
-            // Display the subtotal
-            subtotalContainer.innerHTML = `<p>Subtotal: $${subtotal.toFixed(2)}</p>`;
         }
 
         // Call the displayCartItems function when the page loads
         window.onload = displayCartItems;
 
         // Function to update quantity of an item
-        function updateQuantity(index, quantity) {
-            cart[index].quantity = parseInt(quantity);
+        function updateQuantity(id, quantity) {
+            console.log(quantity)
+            cart[id] = parseInt(quantity);
+            console.log(cart)
             localStorage.setItem('cart', JSON.stringify(cart));
             displayCartItems();
         }
 
         // Function to remove an item from the cart and update display
-        function removeItem(index) {
-            cart.splice(index, 1);
+        function removeItem(id) {
+            delete cart[id];
             localStorage.setItem('cart', JSON.stringify(cart)); 
             displayCartItems(); 
         }
 
         // Function to clear the entire cart
         function clearCart() {
-            cart = []; 
-            localStorage.removeItem('cart'); 
+            cart = {}; 
+            localStorage.setItem('cart', JSON.stringify(cart)); 
             displayCartItems(); 
         }
 
@@ -101,7 +125,7 @@
             if (cart.length === 0) {
                 alert('Cannot proceed to checkout because the cart is empty.');
             } else {
-                localStorage.setItem('checkoutCart', JSON.stringify(cart));
+                localStorage.setItem('checkoutCart', JSON.stringify(cartData));
                 window.location.href = "checkout.html";
             }
         }
