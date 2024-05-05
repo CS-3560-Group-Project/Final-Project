@@ -1,39 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CPP Campus Food & Delivery</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="../css/order.css" />
-    <script src="../js/order.js" defer></script>
     <link rel="icon" href="logoImg.png" type="image/x-icon" />
-  </head>
-  <body>
+</head>
+<body>
     <div class="login_container">
-      <div class="header">
-        <img id="logo" src="img/pomonalogo.png" />
-        <h1 id="HiFit">CPP Campus Food & Delivery</h1>
-      </div>
+        <div class="header">
+            <img id="logo" src="img/pomonalogo.png" />
+            <h1 id="title">CPP Campus Food & Delivery</h1>
+        </div>
         <img id="shoppingCart" src="img/shoppingCart.png" />
-      <p class="underLogo"><strong>Shopping Cart</strong></p>
-      <br />
+        <p class="underLogo"><strong>Shopping Cart</strong></p>
+        <br />
     </div>
+    <button type="button" onclick="returnToFoodPage()">Back to Food Page</button>
+
     <section class="form">
-        <button type="button" class="shoppingCart" onclick="switchToOrderPage()">
-            Return back to Order
-        </button>
-      </section>
-    </div>
+        <p id="emptyCartMessage"></p>
+        <button type="button" onclick="clearCart()">Clear Cart</button>
+        <button id="checkoutButton" type="button" onclick="checkout()">Checkout</button>
+    </section>
+
+    <div id="cart-items"></div>
+    <div id="subtotal"></div>
+
     <script>
-      function switchToOrderPage() {
-        window.location.href = "order.html";
-      }
+        // Retrieve cart items from localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        const cartItemsContainer = document.getElementById('cart-items');
+        const subtotalContainer = document.getElementById('subtotal');
+        const checkoutButton = document.getElementById('checkoutButton');
+        const emptyCartMessage = document.getElementById('emptyCartMessage');
+
+        // Function to display cart items and calculate subtotal
+        function displayCartItems() {
+            cartItemsContainer.innerHTML = '';
+            subtotalContainer.innerHTML = '';
+
+            let subtotal = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.textContent = 'Cart is empty.';
+                return;
+            }
+
+            emptyCartMessage.textContent = '';
+
+            // Loop through each item in the cart
+            cart.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.innerHTML = `
+                    <p>Name: ${item.name}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                    <p>Price: $${(item.price * item.quantity).toFixed(2)}</p>
+                    <label for="quantity-${index}">Quantity:</label>
+                    <input type="number" id="quantity-${index}" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
+                    <button onclick="removeItem(${index})">Remove Item</button>
+                    <hr>
+                `;
+                cartItemsContainer.appendChild(itemElement);
+                subtotal += item.price * item.quantity;
+            });
+
+            // Display the subtotal
+            subtotalContainer.innerHTML = `<p>Subtotal: $${subtotal.toFixed(2)}</p>`;
+        }
+
+        // Call the displayCartItems function when the page loads
+        window.onload = displayCartItems;
+
+        // Function to update quantity of an item
+        function updateQuantity(index, quantity) {
+            cart[index].quantity = parseInt(quantity);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCartItems();
+        }
+
+        // Function to remove an item from the cart and update display
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart)); 
+            displayCartItems(); 
+        }
+
+        // Function to clear the entire cart
+        function clearCart() {
+            cart = []; 
+            localStorage.removeItem('cart'); 
+            displayCartItems(); 
+        }
+
+        // Function to proceed to checkout
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Cannot proceed to checkout because the cart is empty.');
+            } else {
+                localStorage.setItem('checkoutCart', JSON.stringify(cart));
+                window.location.href = "checkout.html";
+            }
+        }
+
+        // Function to return to food.html page
+        function returnToFoodPage() {
+            window.location.href = "food.html";
+        }
     </script>
-    <script>
-      //if (!localStorage.getItem("userId")) {
-      // window.location.href = "login.html";
-      //}
-    </script>
-  </body>
+</body>
 </html>

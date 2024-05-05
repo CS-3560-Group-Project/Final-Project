@@ -8,8 +8,9 @@
 </head>
 <body>
     <header>
-    <h1>Foods</h1>
-    <header>
+        <h1>Foods</h1>
+    </header>
+    <button onclick="returnToRestaurantPage()">Back to Restaurant Page</button>
     <div id="food-list"></div>
 
     <script>
@@ -31,6 +32,7 @@
                             <p>Description: ${food.description}</p>
                             <p>Price: $${(food.price).toFixed(2)}</p>
                             <img src="${food.img}" alt="${food.name}" width="200">
+                            <button onclick="addToCart('${food.name}', ${food.price})">Add to Cart</button>
                         `;
                         foodList.appendChild(foodElement);
                     });
@@ -38,6 +40,17 @@
                 .catch(error => {
                     console.error('Error fetching food data:', error);
                 });
+        }
+        //Function to add each food to cart
+        function addToCart(name, price) {
+            const cartItem = {
+                name: name,
+                price: price
+            };
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.push(cartItem);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${name} added to cart!`);
         }
 
         // Function to extract query parameter from URL
@@ -57,6 +70,11 @@
             fetchFoodData(restaurantId);
         } else {
             console.error('Restaurant ID not found in query parameters');
+        }
+
+        // Function to return to restaurantPage.html
+        function returnToRestaurantPage() {
+            window.location.href = "restaurantPage.html";
         }
     </script>
 </body>

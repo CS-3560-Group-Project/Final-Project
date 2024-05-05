@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Orders</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .title {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .order-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .order-info {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">Past Orders</h1>
+
+    <div id="past-orders"></div>
+
+    <script>
+        // Retrieve past orders from localStorage
+        const pastOrders = JSON.parse(localStorage.getItem('pastOrders')) || [];
+
+        // Get reference to the past orders container
+        const pastOrdersContainer = document.getElementById('past-orders');
+
+        // Function to display past orders
+        function displayPastOrders() {
+            pastOrdersContainer.innerHTML = '';
+
+            // Check if there are any past orders
+            if (pastOrders.length === 0) {
+                pastOrdersContainer.innerHTML = '<p>No past orders available</p>';
+                return;
+            }
+
+            // Loop through each past order and create HTML elements to display them
+            pastOrders.forEach(order => {
+                const orderContainer = document.createElement('div');
+                orderContainer.classList.add('order-container');
+
+                const orderSummary = document.createElement('div');
+                orderSummary.classList.add('order-info');
+                orderSummary.innerHTML = `<strong>Order Summary:</strong><br>${order.orderSummary}`;
+                orderContainer.appendChild(orderSummary);
+
+                const subtotal = document.createElement('div');
+                subtotal.classList.add('order-info');
+                subtotal.innerHTML = `<strong>Subtotal:</strong><br>${order.subtotal}`;
+                orderContainer.appendChild(subtotal);
+
+                const tip = document.createElement('div');
+                tip.classList.add('order-info');
+                tip.innerHTML = `<strong>Tip:</strong><br>${order.tip}`;
+                orderContainer.appendChild(tip);
+
+                const finalTotal = document.createElement('div');
+                finalTotal.classList.add('order-info');
+                finalTotal.innerHTML = `<strong>Final Total:</strong><br>${order.finalTotal}`;
+                orderContainer.appendChild(finalTotal);
+
+                const locationInfo = document.createElement('div');
+                locationInfo.classList.add('order-info');
+                locationInfo.innerHTML = `<strong>Location:</strong><br>${order.locationInfo}`;
+                orderContainer.appendChild(locationInfo);
+
+                const creditCardInfo = document.createElement('div');
+                creditCardInfo.classList.add('order-info');
+                creditCardInfo.innerHTML = `<strong>Credit Card Info:</strong><br>${order.creditCardInfo}`;
+                orderContainer.appendChild(creditCardInfo);
+
+                pastOrdersContainer.appendChild(orderContainer);
+            });
+        }
+
+        // Call the displayPastOrders function when the page loads
+        window.onload = displayPastOrders;
+    </script>
+</body>
+</html>

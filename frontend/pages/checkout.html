@@ -1,32 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account Creation Finished</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
     <link rel="stylesheet" href="styles.css" />
-    <link rel="login" href="credential.html" />
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="../css/order.css" />
     <link rel="icon" href="logoImg.png" type="image/x-icon" />
-  </head>
-  <body>
-    <p class="underLogo"><strong>Order Completed</strong></p>
-    <br />
-    <section class="finalLogin">
-      <h1>Your Order has been Successfully Processed!</h1>
-      <p>
-        You will get a notification as soon as your food is ready to be picked
-        up.
-      </p>
-      <p>Click the button to go back to the menu options</p>
-      <button type="button" class="finalPage" onclick="switchToMenuPage()">
-        Continue to Menu
-      </button>
-    </section>
+</head>
+<body>
+    <div class="login_container">
+        <div class="header">
+            <img id="logo" src="img/pomonalogo.png" />
+            <h1 id="title">CPP Campus Food & Delivery</h1>
+        </div>
+        <img id="shoppingCart" src="img/shoppingCart.png" />
+        <p class="underLogo"><strong>Checkout</strong></p>
+        <br />
+    </div>
+
+    <div id="location-info"></div>
+
+    <button type="button" onclick="goBackToCart()">Return to Shopping Cart</button>
+
+    <div id="order-summary"></div>
+    <div id="subtotal"></div>
+    <div id="tip"></div>
+    <div id="final-total"></div>
+
+    <div>
+        <input type="number" id="custom-tip" placeholder="Enter custom tip amount">
+        <button onclick="addCustomTip()">Add Custom Tip</button>
+    </div>
+
+    <div id="tip-options"></div>
+
+    <div id="credit-card-info"></div>
+
+    <button type="button" onclick="proceedToCheckout()">Checkout</button>
+
     <script>
-      function switchToMenuPage() {
-        window.location.href = "restaurantPage.html";
-      }
+        // Retrieve cart items from localStorage
+        const cart = JSON.parse(localStorage.getItem('checkoutCart')) || [];
+
+        // Get reference to elements
+        const orderSummaryContainer = document.getElementById('order-summary');
+        const subtotalContainer = document.getElementById('subtotal');
+        const tipContainer = document.getElementById('tip');
+        const finalTotalContainer = document.getElementById('final-total');
+        const locationInfoContainer = document.getElementById('location-info');
+        const creditCardInfoContainer = document.getElementById('credit-card-info');
+
+        // Function to display order summary, subtotal, tip, and final total
+        function displayOrderSummary() {
+          
+            orderSummaryContainer.innerHTML = '';
+            subtotalContainer.innerHTML = '';
+            tipContainer.innerHTML = '';
+            finalTotalContainer.innerHTML = '';
+
+            let subtotal = 0;
+            let tipAmount = 0;
+
+            // Display order summary
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.innerHTML = `
+                    <p>Name: ${item.name}</p>
+                    <p>Price: $${(item.price * item.quantity).toFixed(2)}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                    <hr>
+                `;
+                orderSummaryContainer.appendChild(itemElement);
+
+                // Calculate subtotal
+                subtotal += item.price * item.quantity;
+            });
+
+            // Display subtotal
+            subtotalContainer.innerHTML = `<p>Subtotal: $${subtotal.toFixed(2)}</p>`;
+
+            // Display selected tip amount
+            tipContainer.innerHTML = `<p>Tip Amount: $${tipAmount.toFixed(2)}</p>`;
+
+            // Display tip buttons
+            const tipOptions = {
+                '10%': 0.1,
+                '15%': 0.15,
+                '20%': 0.2
+            };
+
+            const tipOptionsContainer = document.getElementById('tip-options');
+            tipOptionsContainer.innerHTML = ''; 
+
+            for (const [tipOption, percentage] of Object.entries(tipOptions)) {
+                const tipOptionElement = document.createElement('button');
+                tipOptionElement.textContent = tipOption;
+                tipOptionElement.onclick = () => updateTipAmount(percentage);
+                tipOptionsContainer.appendChild(tipOptionElement);
+            }
+
+            // Display final total
+            const finalTotal = subtotal + tipAmount;
+            finalTotalContainer.innerHTML = `<p>Total: $${finalTotal.toFixed(2)}</p>`;
+        }
+
+        // Call the displayOrderSummary function when the page loads
+        window.onload = function() {
+            displayOrderSummary();
+            displayLocation();
+            displayCreditCardInfo();
+        };
+
+        // Function to update tip amount
+        function updateTipAmount(percentage) {
+            const tipAmount = (parseFloat(document.getElementById('subtotal').textContent.split('$')[1]) * percentage).toFixed(2);
+            tipContainer.innerHTML = `<p>Tip Amount: $${tipAmount}</p>`;
+            finalTotalContainer.innerHTML = `<p>Total: $${(parseFloat(document.getElementById('subtotal').textContent.split('$')[1]) + parseFloat(tipAmount)).toFixed(2)}</p>`;
+        }
+
+        // Function to add custom tip
+        function addCustomTip() {
+            const customTipAmount = parseFloat(document.getElementById('custom-tip').value);
+            if (!isNaN(customTipAmount)) {
+                tipContainer.innerHTML = `<p>Tip Amount: $${customTipAmount.toFixed(2)}</p>`;
+                finalTotalContainer.innerHTML = `<p>Total: $${(parseFloat(document.getElementById('subtotal').textContent.split('$')[1]) + parseFloat(customTipAmount)).toFixed(2)}</p>`;
+            }
+        }
+
+        // Function to go back to the shopping cart page
+        function goBackToCart() {
+            window.location.href = "shoppingCart.html";
+        }
+
+        // Function to proceed to checkout
+        function proceedToCheckout() {
+            // Store order information in localStorage
+            const orderInfo = {
+                orderSummary: orderSummaryContainer.innerHTML,
+                subtotal: subtotalContainer.innerHTML,
+                tip: tipContainer.innerHTML,
+                finalTotal: finalTotalContainer.innerHTML,
+                locationInfo: locationInfoContainer.innerHTML,
+                creditCardInfo: creditCardInfoContainer.innerHTML
+            };
+            localStorage.setItem('lastOrder', JSON.stringify(orderInfo));
+
+            // Redirect to checkoutCompleted.html
+            window.location.href = "checkoutCompleted.html";
+        }
+
+        // Function to display location information
+        function displayLocation() {
+            const locationId = localStorage.getItem('locationId');
+            if (locationId) {
+                // Assuming location data is stored in localStorage as an object
+                const locationData = JSON.parse(localStorage.getItem('locationData'));
+                if (locationData) {
+                    locationInfoContainer.innerHTML = `<p>Location: ${locationData.locationName}</p>`;
+                }
+            }
+        }
+
+        // Function to display credit card information
+        function displayCreditCardInfo() {
+            const creditCardData = JSON.parse(localStorage.getItem('creditCardData'));
+            if (creditCardData) {
+                creditCardInfoContainer.innerHTML = `
+                    <p>Cardholder's Name: ${creditCardData.cardholderName}</p>
+                    <p>Card Number: ${creditCardData.cardNumber}</p>
+                    <p>Expiration Date: ${creditCardData.expirationDate}</p>
+                `;
+            }
+        }
     </script>
-  </body>
+</body>
 </html>
