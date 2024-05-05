@@ -167,6 +167,10 @@
             checkoutData["accountId"] = accountId;
 
             console.log(checkoutData)
+            localStorage.removeItem("cart")
+            localStorage.removeItem("checkoutCart")
+            localStorage.setItem("checkoutCart", JSON.stringify([{}]))
+            localStorage.setItem("cart", JSON.stringify({}))
             // Redirect to checkoutCompleted.html
             // window.location.href = "checkoutCompleted.html";
         }
