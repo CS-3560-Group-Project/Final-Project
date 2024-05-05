@@ -49,7 +49,7 @@
         <button
           type="button"
           class="createAccount"
-          onclick="switchToFinalAccountPage()"
+          onclick="submitForm(); switchToFinalAccountPage()"
         >
           Create Account
         </button>
@@ -63,6 +63,38 @@
     <script>
       function switchToFinalAccountPage() {
         window.location.href = "finishedAccount.html";
+      }
+    </script>
+    <script>
+      function submitForm() {
+        const formData = {
+          name: document.getElementById("newName").value,
+          email: document.getElementById("newEmail").value,
+          password: document.getElementById("newPassword").value,
+          cardName: document.getElementById("cardholderName").value,
+          cardNumber: document.getElementById("cardNumber").value,
+          cardExpiration: document.getElementById("expirationDate").value,
+          cvv: document.getElementById("CVV").value,
+        };
+
+        fetch("/create-account", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log("Account created successfully");
+              switchToFinalAccountPage(); // After successful submission, redirect to final account page
+            } else {
+              console.error("Error creating account");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       }
     </script>
   </body>
