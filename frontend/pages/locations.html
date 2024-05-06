@@ -3,24 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Restaurants</title>
+    <title>Locations</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
     <link rel="stylesheet" type="text/css" href="restaurantPage.css" />
   </head>
   <body>
     <header>
-      <h1>Locations</h1>
-      <button
-        type="button"
-        class="createAccount"
-        onclick="switchToAccountPage()"
-      >
-        <img id="menuAccount" src="img/billybronco.png" />
-      </button>
+      <img id="logo" src="img/pomonalogo.png" />
+
+      <h1>CPP Campus Food & Delivery</h1>
+
+      <p class="underLogo">
+        <strong>Locations</strong>
+      </p>
+
+      <img id="accountImage" src="img/billybronco.png" onclick="switchToAccountPage()"/>
     </header>
 
     <div id="location-list"></div>
 
     <script>
+        function switchToAccountPage() {
+          window.location.href = "accountPage.html";
+        }
+
         if (!localStorage.getItem("userId")) {
             window.location.href = "login.html"; 
         }
@@ -64,10 +70,6 @@
       // Call fetchLocations function when the page loads
       window.onload = fetchLocations;
     </script>
-    <script>
-      function switchToAccountPage() {
-        window.location.href = "accountPage.html";
-      }
-    </script>
+    
   </body>
 </html>

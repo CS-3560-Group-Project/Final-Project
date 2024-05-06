@@ -5,24 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Menu</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="restaurantPage.css" />
 </head>
 <body>
-    <div class="login_container">
-        <div class="header">
-            <img id="logo" src="img/pomonalogo.png" />
+    <header>
+        <img id="logo" src="img/pomonalogo.png" />
 
-            <h1 id="title">CPP Campus Food & Delivery</h1>
-        </div>
+        <h1>CPP Campus Food & Delivery</h1>
     
         <p class="underLogo">
             <strong>Restaurant Menu</strong>
         </p>
         
         <img id="accountImage" src="img/billybronco.png" onclick="switchToAccountPage()"/>
-    </div>
+    </header>
     
     <ul>
-        <button onclick="returnToRestaurantPage()">
+        <button type="button" onclick="returnToRestaurantPage()">
             Back to Restaurants
         </button>
 
@@ -56,8 +55,10 @@
                             <p>Description: ${food.description}</p>
                             <p>Price: $${(food.price).toFixed(2)}</p>
                             <img src="${food.img}" alt="${food.name}" width="200">
+                            <br />
                             <button onclick="addToCart('${food.id}')">Add to Cart</button>
                         `;
+                        foodElement.classList.add('food-item'); // Add food-item class for styling
                         foodList.appendChild(foodElement);
                     });
                 })
