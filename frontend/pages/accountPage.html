@@ -3,15 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account Creation Finished</title>
+    <title>Account Page</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="login" href="credential.html" />
     <link rel="icon" href="logoImg.png" type="image/x-icon" />
   </head>
   <body>
-    <img id="accountImage" src="img/billybronco.png" />
-    <p class="underLogo"><strong>Account Page</strong></p>
-    <br />
+    <header>
+      <img id="logo" src="img/pomonalogo.png" />
+
+      <h1>CPP Campus Food & Delivery</h1>
+
+      <p class="underLogo">
+        <strong>Account Page</strong>
+      </p>
+
+      <img id="accountImage" src="img/billybronco.png" onclick="switchToAccountPage()"/>
+    </header>
+
+    <ul>
+      <button type="button" class="createAccount" onclick="switchToMenuPage()">
+          Return to Menus
+      </button>
+    </ul>
+    
     <section class="account">
       <div id="accountInfo">
         <form id="accountForm" action="javascript:void(0);" method="POST">
@@ -44,19 +59,18 @@
         </form>
       </div>
 
-      <button type="button" class="createAccount" onclick="switchToMenuPage()">
-        Return back to Menu
-      </button>
-      <br /><br />
-      <button type="submit" class="submit" onclick="logout()">Logout</button>
-      <br /><br />
       <button type="submit" class="submit" form="accountForm">
         Change Information
       </button>
-      <br /><br />
+      <br />
       <button type="submit" class="submit" onclick="deleteAccount()">
         Delete Account
       </button>
+      <br />
+      <button type="submit" class="submit" onclick="logout()">
+        Logout
+      </button>
+
     </section>
 
     <script>

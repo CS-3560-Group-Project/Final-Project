@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPP Campus Food & Delivery</title>
+    <title>Shopping Cart</title>
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="../css/order.css" />
-    <link rel="icon" href="logoImg.png" type="image/x-icon" />
 </head>
 <body>
-    <div class="login_container">
-        <div class="header">
-            <img id="logo" src="img/pomonalogo.png" />
-            <h1 id="title">CPP Campus Food & Delivery</h1>
-        </div>
-        <img id="shoppingCart" src="img/shoppingCart.png" />
-        <p class="underLogo"><strong>Shopping Cart</strong></p>
-        <br />
-    </div>
-    <button type="button" onclick="returnToFoodPage()">Back to Food Page</button>
+    <header>
+        <img id="logo" src="img/pomonalogo.png" />
+
+        <h1>CPP Campus Food & Delivery</h1>
+
+        <p class="underLogo">
+            <strong>Shopping Cart</strong>
+        </p>
+        
+        <img id="shoppingCart" src="img/shoppingCart.png" onclick="goToShoppingCart()" />
+    </header>
+
+    <ul>
+        <button type="button" onclick="returnToFoodPage()">
+            Back to Menus
+        </button>
+    </ul>
 
     <section class="form">
         <div id="cart-items"></div>

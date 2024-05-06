@@ -3,24 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Foods</title>
-    <link rel="stylesheet" type="text/css" href="restaurantPage.css">
+    <title>Food Menu</title>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <header>
-        <h1>Foods</h1>
-    </header>
-    
-    <button 
-        onclick="returnToRestaurantPage()">
-            Back to Restaurant Page
-    </button>
+    <div class="login_container">
+        <div class="header">
+            <img id="logo" src="img/pomonalogo.png" />
 
-    <button type="button" 
-        onclick="goToShoppingCart()">
-            Shopping Cart
-    </button>
+            <h1 id="title">CPP Campus Food & Delivery</h1>
+        </div>
     
+        <p class="underLogo">
+            <strong>Restaurant Menu</strong>
+        </p>
+        
+        <img id="accountImage" src="img/billybronco.png" onclick="switchToAccountPage()"/>
+    </div>
+    
+    <ul>
+        <button onclick="returnToRestaurantPage()">
+            Back to Restaurants
+        </button>
+
+        <button type="button" onclick="goToShoppingCart()">
+            Shopping Cart
+        </button>
+    </ul>
+
     <div id="food-list"></div>
 
     <script>

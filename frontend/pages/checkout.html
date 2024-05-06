@@ -9,20 +9,25 @@
     <link rel="icon" href="logoImg.png" type="image/x-icon" />
 </head>
 <body>
-    <div class="login_container">
-        <div class="header">
-            <img id="logo" src="img/pomonalogo.png" />
-            <h1 id="title">CPP Campus Food & Delivery</h1>
-        </div>
-        <img id="shoppingCart" src="img/shoppingCart.png" />
-        <p class="underLogo"><strong>Checkout</strong></p>
-        <br />
-    </div>
+    <header>
+        <img id="logo" src="img/pomonalogo.png" />
+  
+        <h1>CPP Campus Food & Delivery</h1>
+  
+        <p class="underLogo">
+          <strong>Checkout</strong>
+        </p>
+  
+        <img id="shoppingCart" src="img/shoppingCart.png" onclick="goBackToCart()" /> 
+    </header>
+
+    <ul>
+        <button type="button" onclick="goBackToCart()">
+            Return to Shopping Cart
+        </button>
+    </ul>
 
     <div id="location-info"></div>
-
-    <button type="button" onclick="goBackToCart()">Return to Shopping Cart</button>
-
     <div id="order-summary"></div>
     <div id="subtotal"></div>
     <div id="tip"></div>

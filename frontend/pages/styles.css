@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+header {
+  text-align: center;
+}
+
 html {
   scroll-behavior: smooth;
   background: linear-gradient(135deg, #bfdff0, #c2edce);
@@ -35,11 +39,12 @@ body {
   position: absolute;
   width: 75px;
   height: 75px;
-  top: 1%;
+  top: 2%;
   right: 3%;
-  border-radius: 50%;
+  border-radius: 70%;
   overflow: hidden;
   border: 5px solid #374e80;
+  cursor: pointer;
 }
 
 .account {
@@ -67,6 +72,7 @@ body {
   border-radius: 70%;
   overflow: hidden;
   border: 5px solid #374e80;
+  cursor: pointer;
 }
 
 .form,
@@ -134,6 +140,7 @@ body {
   padding: 15px;
   border-style: solid;
   border-width: 5px;
+  text-align: center;
 }
 
 .buttonDiv {

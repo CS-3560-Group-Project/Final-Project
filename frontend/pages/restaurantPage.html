@@ -3,28 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Restaurants</title>
+    <title>Restaurant List</title>
     <link rel="stylesheet" type="text/css" href="restaurantPage.css" />
   </head>
   <body>
     <header>
-      <h1>Restaurants</h1>
+      <img id="logo" src="img/pomonalogo.png" />
+      
+      <h1>CPP Campus Food & Delivery</h1>
 
+      <p class="underLogo">
+        <strong>Restaurant List</strong>
+      </p>
+
+      <img id="menuAccount" src="img/billybronco.png" onclick="switchToAccountPage()"/>
+    </header>
+    
+    <ul>
       <button type="button" 
         onclick="goToShoppingCart()">
           Shopping Cart
       </button>
-      
-      <button
-        type="button"
-        class="createAccount"
-        onclick="switchToAccountPage()">
-          Account
-      </button>
-      
-      <img id="menuAccount" src="img/billybronco.png" onclick="switchToAccountPage()"/>
-
-    </header>
+    </ul>
 
     <div id="restaurant-list"></div>
 
