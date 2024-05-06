@@ -145,7 +145,7 @@ def deleteAccount():
         accountData = accountData[0]
         cardId = accountData[1]
         orders = getOrderQueryByCustomer(accountId)
-        if deleteAccountQuery(accountId) and deleteCreditCardQuery(cardId) and (deleteOrderQuery(accountId) if orders else True):
+        if (deleteOrderQuery(accountId) if orders else True) and deleteAccountQuery(accountId) and deleteCreditCardQuery(cardId):
             return '', 204  
     else:
         return jsonify({"error": "Account not found"}), 404
