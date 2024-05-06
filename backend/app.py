@@ -398,6 +398,44 @@ def placeOrder():
     
     return jsonify({"error": "Invalid request type."}), 404
 
+@app.route("/<accountId>/order-history", methods = ["GET"])
+def orderHistory(accountId):
+    if request.method == "GET":
+        # get customer order
+        customerOrders = getOrderQueryByCustomer(accountId)
+        if not customerOrders:
+            return jsonify({"error": "No past orders."}), 404
+        
+        pastOrder = []
+
+        for order in customerOrders:
+            orderId = order[0]
+            restaurantId = order[1]
+            locationId = order[2]
+            customerId = order[3]
+            orderDate = order[4]
+            totalAmount = order[5]
+
+            locations = getLocationQuery(locationId)[0]
+            locationString = f"Building {locations[1]}, Room {locations[2]}"\
+            
+            restaurant = getRestaurantQuery(restaurantId)[0]
+            restaurantName = restaurant[2]
+
+            pastOrder.append({
+                "id": orderId,
+                "restaurant": restaurantName,
+                "location": locationString,
+                "date": orderDate,
+                "total": totalAmount
+            })
+
+        pastOrder = sorted(pastOrder, key=lambda x: datetime.strptime(x["date"], "%Y-%m-%d %H:%M:%S") if isinstance(x["date"], str) else x["date"], reverse=True)
+
+        return jsonify(pastOrder), 200
+
+    return jsonify({"error": "Invalid request type."}), 404
+
 # RUN
 if __name__ == "__main__":  
    app.run(debug=True, port=PORT)

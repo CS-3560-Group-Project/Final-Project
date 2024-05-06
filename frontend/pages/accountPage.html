@@ -71,6 +71,10 @@
         Logout
       </button>
 
+      <br /><br />
+      <button type="submit" class="submit" onclick="orderHistory()">
+        Order History
+      </button>
     </section>
 
     <script>
@@ -112,6 +116,10 @@
               );
             });
         }
+      }
+
+      function orderHistory() {
+        window.location.href = "pastOrders.html";
       }
 
       function logout() {

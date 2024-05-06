@@ -24,66 +24,88 @@
 <body>
     <h1 class="title">Past Orders</h1>
 
+    <button 
+        onclick="returnToRestaurantPage()">
+            Back to Restaurant Page
+    </button>
+
+    <button 
+        onclick="returnToAccountPage()">
+            Back to Account Page
+    </button>
+
     <div id="past-orders"></div>
 
     <script>
-        // Retrieve past orders from localStorage
-        const pastOrders = JSON.parse(localStorage.getItem('pastOrders')) || [];
-
+        if (!localStorage.getItem("userId")) {
+            window.location.href = "login.html"; 
+        }
         // Get reference to the past orders container
         const pastOrdersContainer = document.getElementById('past-orders');
+        const accountId = localStorage.getItem("userId");
 
         // Function to display past orders
         function displayPastOrders() {
             pastOrdersContainer.innerHTML = '';
+            
+            fetch(`http://127.0.0.1:5555/${accountId}/order-history`)
+                .then(response => response.json())
+                .then(data => {
+                    const pastOrders = Object.values(data);
 
-            // Check if there are any past orders
-            if (pastOrders.length === 0) {
-                pastOrdersContainer.innerHTML = '<p>No past orders available</p>';
-                return;
-            }
+                    // Loop through each past order and create HTML elements to display them
+                    pastOrders.forEach(order => {
+                        const orderContainer = document.createElement('div');
+                        orderContainer.classList.add('order-container');
 
-            // Loop through each past order and create HTML elements to display them
-            pastOrders.forEach(order => {
-                const orderContainer = document.createElement('div');
-                orderContainer.classList.add('order-container');
+                        const orderName = document.createElement('div');
+                        orderName.classList.add('order-info');
+                        orderName.innerHTML = `<strong>Restaurant:</strong><br>${order.restaurant}`;
+                        orderContainer.appendChild(orderName);
 
-                const orderSummary = document.createElement('div');
-                orderSummary.classList.add('order-info');
-                orderSummary.innerHTML = `<strong>Order Summary:</strong><br>${order.orderSummary}`;
-                orderContainer.appendChild(orderSummary);
+                        const locationInfo = document.createElement('div');
+                        locationInfo.classList.add('order-info');
+                        locationInfo.innerHTML = `<strong>Location:</strong><br>${order.location}`;
+                        orderContainer.appendChild(locationInfo);
 
-                const subtotal = document.createElement('div');
-                subtotal.classList.add('order-info');
-                subtotal.innerHTML = `<strong>Subtotal:</strong><br>${order.subtotal}`;
-                orderContainer.appendChild(subtotal);
+                        const subtotal = document.createElement('div');
+                        subtotal.classList.add('order-info');
+                        subtotal.innerHTML = `<strong>Subtotal:</strong><br>$${order.total}`;
+                        orderContainer.appendChild(subtotal);
 
-                const tip = document.createElement('div');
-                tip.classList.add('order-info');
-                tip.innerHTML = `<strong>Tip:</strong><br>${order.tip}`;
-                orderContainer.appendChild(tip);
+                        const creditCardInfo = document.createElement('div');
+                        creditCardInfo.classList.add('order-info');
+                        creditCardInfo.innerHTML = `<strong>Order Number:</strong><br>${order.id}`;
+                        orderContainer.appendChild(creditCardInfo);
 
-                const finalTotal = document.createElement('div');
-                finalTotal.classList.add('order-info');
-                finalTotal.innerHTML = `<strong>Final Total:</strong><br>${order.finalTotal}`;
-                orderContainer.appendChild(finalTotal);
+                        const orderDate = document.createElement('div');
+                        orderDate.classList.add('order-info');
+                        orderDate.innerHTML = `<strong>Order Date:</strong><br>${order.date}`;
+                        orderContainer.appendChild(orderDate);
 
-                const locationInfo = document.createElement('div');
-                locationInfo.classList.add('order-info');
-                locationInfo.innerHTML = `<strong>Location:</strong><br>${order.locationInfo}`;
-                orderContainer.appendChild(locationInfo);
-
-                const creditCardInfo = document.createElement('div');
-                creditCardInfo.classList.add('order-info');
-                creditCardInfo.innerHTML = `<strong>Credit Card Info:</strong><br>${order.creditCardInfo}`;
-                orderContainer.appendChild(creditCardInfo);
-
-                pastOrdersContainer.appendChild(orderContainer);
-            });
+                        pastOrdersContainer.appendChild(orderContainer);
+                    });
+                })
+                .catch(error => {
+                    // Check if there are any past orders
+                    if (pastOrders.length === 0) {
+                        pastOrdersContainer.innerHTML = '<p>No past orders available</p>';
+                        return;
+                    }
+                });
         }
 
         // Call the displayPastOrders function when the page loads
         window.onload = displayPastOrders;
+
+        // Function to return to restaurantPage.html
+        function returnToRestaurantPage() {
+            window.location.href = "restaurantPage.html";
+        }
+
+        function returnToAccountPage() {
+            window.location.href = "accountPage.html";
+        }
     </script>
 </body>
 </html>
